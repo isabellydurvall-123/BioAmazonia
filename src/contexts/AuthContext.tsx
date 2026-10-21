@@ -24,7 +24,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const ADMIN_EMAIL = ['isabellydurvall@gmail.com', 'adailtonc716@gmail.com'];
+export const ADMIN_EMAIL = 'isabellydurvall@gmail.com';
 const LOCAL_USER_KEY = 'bioamazonia_active_auth_profile_v3';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
