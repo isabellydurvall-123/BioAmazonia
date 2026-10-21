@@ -122,6 +122,11 @@ export function getInitialDemoRecords(): UnifiedExperimentRecord[] {
 const LOCAL_STORAGE_KEY = 'bioamazonia_experiment_records_v2';
 const DRAFT_STORAGE_PREFIX = 'bioamazonia_form_draft_';
 
+const normalizeExperimentPhotoPath = (record: UnifiedExperimentRecord): UnifiedExperimentRecord => {
+  const photoUrl = record.photoUrl?.replace(/^\/?(?:src\/assets|public)\/images\//, '/imagens/');
+  return photoUrl === record.photoUrl ? record : { ...record, photoUrl };
+};
+
 export interface ValidationResult {
   isValid: boolean;
   errors: Record<string, string>;
@@ -184,7 +189,11 @@ class ExperimentStorageService implements IExperimentStorageService {
     try {
       const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (stored) {
-        this.localCache = JSON.parse(stored);
+        this.localCache = (JSON.parse(stored) as UnifiedExperimentRecord[]).map(normalizeExperimentPhotoPath);
+        const updatedStorage = JSON.stringify(this.localCache);
+        if (updatedStorage !== stored) {
+          localStorage.setItem(LOCAL_STORAGE_KEY, updatedStorage);
+        }
       } else {
         this.localCache = getInitialDemoRecords();
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(this.localCache));
@@ -314,7 +323,7 @@ class ExperimentStorageService implements IExperimentStorageService {
       if (!snapshot.empty) {
         const firestoreRecords: UnifiedExperimentRecord[] = [];
         snapshot.forEach(docSnap => {
-          firestoreRecords.push(docSnap.data() as UnifiedExperimentRecord);
+          firestoreRecords.push(normalizeExperimentPhotoPath(docSnap.data() as UnifiedExperimentRecord));
         });
 
         // Sincronizar cache local com o banco remoto mesclando por ID
@@ -343,7 +352,7 @@ class ExperimentStorageService implements IExperimentStorageService {
       const docRef = doc(db, 'experiments', id);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        return docSnap.data() as UnifiedExperimentRecord;
+        return normalizeExperimentPhotoPath(docSnap.data() as UnifiedExperimentRecord);
       }
     } catch (e) {
       console.warn('Recuperando do repositório local:', e);
@@ -368,11 +377,11 @@ class ExperimentStorageService implements IExperimentStorageService {
     }
 
     const now = new Date().toISOString();
-    const newRecord: UnifiedExperimentRecord = {
+    const newRecord = normalizeExperimentPhotoPath({
       ...recordData,
       createdAt: now,
       updatedAt: now
-    };
+    });
 
     // Tentar persistir no Firestore
     try {
@@ -411,10 +420,10 @@ class ExperimentStorageService implements IExperimentStorageService {
       throw new Error(firstError);
     }
 
-    const updatedRecord: UnifiedExperimentRecord = {
+    const updatedRecord = normalizeExperimentPhotoPath({
       ...record,
       updatedAt: new Date().toISOString()
-    };
+    });
 
     try {
       const docRef = doc(db, 'experiments', updatedRecord.id);

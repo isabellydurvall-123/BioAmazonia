@@ -818,7 +818,7 @@ export const ExperimentRecordFormModal: React.FC<ExperimentRecordFormModalProps>
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-slate-200 text-slate-800 font-mono text-[11px]"
-                placeholder="/src/assets/images/... ou URL autorizada"
+                placeholder="/imagens/... ou URL autorizada"
               />
             </div>
           </div>

@@ -12,7 +12,7 @@ export const FRUITS_DATABASE: Fruit[] = [
     totalPhenolics_mgGAE: 1368,
     totalCarotenoids_mcg: 1080,
     anthocyanins_mg: 320,
-    image: '/src/assets/images/acai_botanical_1792170877764.jpg',
+    image: '/imagens/acai_botanical_1792170877764.jpg',
     imageAlt: 'Cacho de açaí com frutos roxos maduros no dossel da várzea amazônica',
     description: 'Fruto nativo de palmeira de várzea, de coloração roxo-escura intensa devido à elevada concentração de antocianinas glicosiladas.',
     biochemicalAction: 'Neutralização direta de radicais peroxil (ROO•) e ânion superóxido (O2•-), inibição da peroxidação de lipoproteínas de baixa densidade (LDL) e regulação de enzimas de desintoxicação celular.',
@@ -32,7 +32,7 @@ export const FRUITS_DATABASE: Fruit[] = [
     totalPhenolics_mgGAE: 2060,
     totalCarotenoids_mcg: 450,
     anthocyanins_mg: 48,
-    image: '/src/assets/images/camu_camu_botanical_1792170879044.jpg',
+    image: '/imagens/camu_camu_botanical_1792170879044.jpg',
     imageAlt: 'Frutos esféricos de camu-camu avermelhados com corte revelando polpa translúcida',
     description: 'Pequeno fruto arbustivo de margem de rios com a mais elevada concentração documentada de ácido L-ascórbico entre os vegetais neotropicais.',
     biochemicalAction: 'Doação de elétrons univalente para regeneração de alfa-tocoferol, eliminação estequiométrica de radicais hidroxila (•OH) e co-fator essencial na hidroxilação de prolina celular.',
@@ -52,7 +52,7 @@ export const FRUITS_DATABASE: Fruit[] = [
     totalPhenolics_mgGAE: 420,
     totalCarotenoids_mcg: 31200, // Rico em beta-caroteno pró-vitamina A
     anthocyanins_mg: 0,
-    image: '/src/assets/images/buriti_botanical_1792170878800.jpg',
+    image: '/imagens/buriti_botanical_1792170878800.jpg',
     imageAlt: 'Fruto de buriti com casca escamosa marrom-avermelhada e polpa alaranjada intensa',
     description: 'Palmeira imponente dos veredas e igapós; a polpa do fruto é extraordinariamente rica em carotenoides lipofílicos e ácidos graxos monoinsaturados.',
     biochemicalAction: 'Extinção física de oxigênio singlete (1O2) por transferência de energia eletrônica para o sistema poliênico conjugado e proteção de membranas lipídicas contra foto-oxidação.',
@@ -72,7 +72,7 @@ export const FRUITS_DATABASE: Fruit[] = [
     totalPhenolics_mgGAE: 512,
     totalCarotenoids_mcg: 180,
     anthocyanins_mg: 0,
-    image: '/src/assets/images/cupuacu_botanical_1792170878387.jpg',
+    image: '/imagens/cupuacu_botanical_1792170878387.jpg',
     imageAlt: 'Fruto de cupuaçu partido exibindo polpa cremosa aromática envolvendo sementes',
     description: 'Parente florestal do cacaueiro com aroma penetrante e polpa cremosa ácida, rica em sulfatos de flavonoides raros conhecidos como teograndinas.',
     biochemicalAction: 'Inibição de enzimas inflamatórias (lipoxigenase e ciclooxigenase), quelação de cátions divalentes de ferro livre (Fe2+) e supressão da cascata de radicais lipídicos.',
@@ -92,7 +92,7 @@ export const FRUITS_DATABASE: Fruit[] = [
     totalPhenolics_mgGAE: 310,
     totalCarotenoids_mcg: 19800,
     anthocyanins_mg: 0,
-    image: '/src/assets/images/buriti_botanical_1792170878800.jpg', // fallback gracioso
+    image: '/imagens/buriti_botanical_1792170878800.jpg', // fallback gracioso
     imageAlt: 'Cachos de pupunha com frutos piramidais de casca amarelo-avermelhada',
     description: 'Palmeira domesticada milenarmente pelos povos originários amazônicos; frutos amiláceos e ricos em pró-vitamina A e lipídios energéticos.',
     biochemicalAction: 'Captura de radicais lipoperoxil (LOO•) em matriz hidrofóbica celular e fornecimento de precursores de retinol para imunidade epitelial.',
@@ -112,7 +112,7 @@ export const FRUITS_DATABASE: Fruit[] = [
     totalPhenolics_mgGAE: 680,
     totalCarotenoids_mcg: 220,
     anthocyanins_mg: 0,
-    image: '/src/assets/images/cupuacu_botanical_1792170878387.jpg', // fallback gracioso
+    image: '/imagens/cupuacu_botanical_1792170878387.jpg', // fallback gracioso
     imageAlt: 'Fruto de bacuri silvestre com casca espessa resinosa e gomos brancos perfumados',
     description: 'Árvore de grande porte nativa do estuário amazônico e transição com o cerrado; frutos de polpa alva de sabor agridoce refinado e rica em xantonas.',
     biochemicalAction: 'Propriedades imunomoduladoras via xantonas polifenólicas com capacidade quelante de metais de transição e varredura de óxido nítrico.',

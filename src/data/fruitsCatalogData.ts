@@ -116,7 +116,7 @@ export const FRUITS_CATALOG: FruitSpecies[] = [
     ],
     authorizedPhotographs: [
       {
-        url: '/src/assets/images/camu_camu_botanical_1792170879044.jpg',
+        url: '/imagens/camu_camu_botanical_1792170879044.jpg',
         caption: 'Frutos maduros de camu-camu (Myrciaria dubia) exibindo casca avermelhada e polpa translúcida seccionada.',
         authorOrProvenance: 'Acervo BioAmazônia (Documentação Botânica Autenticada)'
       }
@@ -232,7 +232,7 @@ export const FRUITS_CATALOG: FruitSpecies[] = [
     ],
     authorizedPhotographs: [
       {
-        url: '/src/assets/images/acai_botanical_1792170877764.jpg',
+        url: '/imagens/acai_botanical_1792170877764.jpg',
         caption: 'Cacho maduro com drupas de açaí ricas em antocianinas sob o dossel de palmeira amazônica.',
         authorOrProvenance: 'Acervo BioAmazônia (Documentação Botânica Autenticada)'
       }
@@ -355,7 +355,7 @@ export const FRUITS_CATALOG: FruitSpecies[] = [
     ],
     authorizedPhotographs: [
       {
-        url: '/src/assets/images/tucuma_botanical_1792172044272.jpg',
+        url: '/imagens/tucuma_botanical_1792172044272.jpg',
         caption: 'Frutos de tucumã inteiros e partidos ao meio revelando a polpa alaranjada fibrosa e o endocarpo escuro.',
         authorOrProvenance: 'Acervo BioAmazônia (Documentação Botânica Autenticada)'
       }
@@ -478,7 +478,7 @@ export const FRUITS_CATALOG: FruitSpecies[] = [
     ],
     authorizedPhotographs: [
       {
-        url: '/src/assets/images/buriti_botanical_1792170878800.jpg',
+        url: '/imagens/buriti_botanical_1792170878800.jpg',
         caption: 'Fruto silvestre de buriti exibindo casca escamosa geométrica e polpa alaranjada rica em beta-caroteno.',
         authorOrProvenance: 'Acervo BioAmazônia (Documentação Botânica Autenticada)'
       }
@@ -603,7 +603,7 @@ export const FRUITS_CATALOG: FruitSpecies[] = [
     ],
     authorizedPhotographs: [
       {
-        url: '/src/assets/images/cubiu_botanical_1792172044686.jpg',
+        url: '/imagens/cubiu_botanical_1792172044686.jpg',
         caption: 'Bagas maduras de cubiu (Solanum sessiliflorum) com casca dourada e fruto seccionado expondo sementes e polpa acídula.',
         authorOrProvenance: 'Acervo BioAmazônia (Documentação Botânica Autenticada)'
       }

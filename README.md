@@ -215,7 +215,7 @@ A estrutura pode variar conforme a implementação. Em uma aplicação React com
 ```text
 bioamazonia/
 ├── public/
-│   ├── images/
+│   ├── imagens/
 │   └── manifest.json
 ├── src/
 │   ├── assets/

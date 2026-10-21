@@ -5,6 +5,17 @@ import { FRUITS_CATALOG } from '../data/fruitsCatalogData';
 
 const LOCAL_STORAGE_KEY = 'bioamazonia_fruits_catalog_v2';
 
+const normalizeFruitImagePaths = (fruit: FruitSpecies): FruitSpecies => {
+  const authorizedPhotographs = fruit.authorizedPhotographs?.map(photo => ({
+    ...photo,
+    url: photo.url.replace(/^\/(?:src\/assets|public)\/images\//, '/imagens/')
+  }));
+
+  return authorizedPhotographs
+    ? { ...fruit, authorizedPhotographs }
+    : fruit;
+};
+
 export interface IFruitStorageService {
   list(statusFilter?: 'all' | 'publicado' | 'rascunho' | 'em_revisao', currentUser?: UserProfile | null): Promise<FruitSpecies[]>;
   listCachedSync(statusFilter?: 'all' | 'publicado' | 'rascunho' | 'em_revisao', currentUser?: UserProfile | null): FruitSpecies[];
@@ -46,18 +57,17 @@ class FruitStorageService implements IFruitStorageService {
     try {
       const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (stored) {
-        const parsed: FruitSpecies[] = JSON.parse(stored);
+        const parsed: FruitSpecies[] = (JSON.parse(stored) as FruitSpecies[]).map(normalizeFruitImagePaths);
         const existingIds = new Set(parsed.map(f => f.id.toLowerCase()));
-        let hasNew = false;
         for (const catalogFruit of FRUITS_CATALOG) {
           if (!existingIds.has(catalogFruit.id.toLowerCase())) {
             parsed.push(catalogFruit);
-            hasNew = true;
           }
         }
         this.localCache = parsed;
-        if (hasNew) {
-          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(this.localCache));
+        const updatedStorage = JSON.stringify(this.localCache);
+        if (updatedStorage !== stored) {
+          localStorage.setItem(LOCAL_STORAGE_KEY, updatedStorage);
         }
       } else {
         this.localCache = [...FRUITS_CATALOG];
@@ -122,7 +132,7 @@ class FruitStorageService implements IFruitStorageService {
       if (!snap.empty) {
         const firestoreList: FruitSpecies[] = [];
         snap.forEach(d => {
-          firestoreList.push(d.data() as FruitSpecies);
+          firestoreList.push(normalizeFruitImagePaths(d.data() as FruitSpecies));
         });
 
         // Mesclar com cache local preservando os dados
@@ -162,7 +172,7 @@ class FruitStorageService implements IFruitStorageService {
       const docRef = doc(db, 'fruits', id);
       const snap = await getDoc(docRef);
       if (snap.exists()) {
-        return snap.data() as FruitSpecies;
+        return normalizeFruitImagePaths(snap.data() as FruitSpecies);
       }
     } catch (e) {
       console.warn('Recuperando fruto do cache:', e);

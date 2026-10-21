@@ -69,7 +69,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           <div className="lg:col-span-6">
             <div className="relative rounded-2xl overflow-hidden border border-emerald-950/10 shadow-md bg-slate-100 w-full min-h-[340px] sm:min-h-[420px] lg:min-h-[460px] aspect-[16/10] sm:aspect-[4/3] lg:aspect-[5/4] transition-all">
               <img
-                src="/src/assets/images/bioamazonia_hero_forest_1792170877846.jpg"
+                src="/imagens/bioamazonia_hero_forest_1792170877846.jpg"
                 alt="Dossel da floresta amazônica com bacia fluvial e biodiversidade botânica"
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover"

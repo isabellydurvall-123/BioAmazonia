@@ -5,9 +5,9 @@ import {
 } from '../types';
 
 export const EXPERIMENT_PHOTOS = {
-  titrationVitC: '/src/assets/images/titration_vitaminc_exp_1792173850539.jpg',
-  enzymaticBrowning: '/src/assets/images/enzymatic_browning_exp_1792173850880.jpg',
-  anthocyaninPH: '/src/assets/images/anthocyanin_ph_exp_1792173851951.jpg',
+  titrationVitC: '/imagens/titration_vitaminc_exp_1792173850539.jpg',
+  enzymaticBrowning: '/imagens/enzymatic_browning_exp_1792173850880.jpg',
+  anthocyaninPH: '/imagens/anthocyanin_ph_exp_1792173851951.jpg',
 };
 
 /* =========================================================================
