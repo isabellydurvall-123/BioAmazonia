@@ -2,8 +2,12 @@ import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, 
 import { db } from './firebase';
 import { UserProfile, UserRole } from '../types';
 
-export const ADMIN_EMAIL = 'adailton092991260204@gmail.com';
+export const ADMIN_EMAIL = 'adailtonc716@gmail.com';
+export const MASTER_ADMIN_EMAILS = [ADMIN_EMAIL, 'isabellydurvall@gmail.com'];
 const LOCAL_USERS_KEY = 'bioamazonia_registered_users_v2';
+
+export const isMasterAdminEmail = (email: string): boolean =>
+  MASTER_ADMIN_EMAILS.some(masterEmail => masterEmail === email.trim().toLowerCase());
 
 export interface IUserManagementService {
   listUsers(currentAdmin: UserProfile | null): Promise<UserProfile[]>;
@@ -248,7 +252,7 @@ class UserManagementService implements IUserManagementService {
     const target = this.localCache.find(u => u.uid === userId);
     if (!target) throw new Error('Usuário não encontrado.');
 
-    if (target.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && data.role && data.role !== 'admin') {
+    if (isMasterAdminEmail(target.email) && data.role && data.role !== 'admin') {
       throw new Error('Operação bloqueada: Não é permitido remover as permissões do Administrador Principal.');
     }
 
@@ -296,7 +300,7 @@ class UserManagementService implements IUserManagementService {
     }
 
     const target = this.localCache.find(u => u.uid === userId);
-    if (target && target.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+    if (target && isMasterAdminEmail(target.email)) {
       throw new Error('Operação bloqueada: O Administrador Principal não pode ser excluído.');
     }
 
@@ -321,12 +325,12 @@ class UserManagementService implements IUserManagementService {
 
   public async findAuthorizedUserByEmail(email: string): Promise<UserProfile | null> {
     const cleanEmail = email.trim().toLowerCase();
-    if (cleanEmail === ADMIN_EMAIL.toLowerCase()) {
+    if (isMasterAdminEmail(cleanEmail)) {
       const found = this.localCache.find(u => u.email.toLowerCase() === cleanEmail);
       return found || {
-        uid: 'admin-master-adailton',
-        email: ADMIN_EMAIL,
-        displayName: 'Adailton (Administrador Curador)',
+        uid: `admin-master-${cleanEmail.replace(/[^a-z0-9]+/g, '-')}`,
+        email: cleanEmail,
+        displayName: cleanEmail === ADMIN_EMAIL ? 'Adailton (Administrador Curador)' : 'Isabelly (Administradora Curadora)',
         role: 'admin',
         institution: 'Coordenação Geral BioAmazônia / INPA',
         createdAt: '2026-10-14T08:00:00Z',

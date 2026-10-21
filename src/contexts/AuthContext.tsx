@@ -8,7 +8,7 @@ import {
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, googleProvider, db, testFirestoreConnection } from '../services/firebase';
 import { UserProfile, UserRole } from '../types';
-import { userManagementService } from '../services/userManagementService';
+import { isMasterAdminEmail, userManagementService } from '../services/userManagementService';
 
 interface AuthContextType {
   currentUser: UserProfile | null;
@@ -59,7 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           let resolvedRole: UserRole = 'visitor';
 
           // 1. O Administrador Curador é determinado pelo e-mail mestre autorizado
-          if (cleanEmail === ADMIN_EMAIL.toLowerCase()) {
+          if (isMasterAdminEmail(cleanEmail)) {
             resolvedRole = 'admin';
           } else if (preAuthorizedUser?.role) {
             resolvedRole = preAuthorizedUser.role;

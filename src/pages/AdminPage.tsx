@@ -26,7 +26,7 @@ import { conservationStorageService } from '../services/conservationStorageServi
 import { fruitStorageService } from '../services/fruitStorageService';
 import { topicStorageService } from '../services/topicStorageService';
 import { experimentStorageService } from '../services/experimentStorageService';
-import { userManagementService } from '../services/userManagementService';
+import { isMasterAdminEmail, userManagementService } from '../services/userManagementService';
 import { useAuth } from '../contexts/AuthContext';
 import { 
   ShieldCheck, 
@@ -1877,7 +1877,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout, onNavigate }) =>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {registeredUsers.map((u) => {
-                  const isMasterAdmin = u.email.toLowerCase() === 'adailton092991260204@gmail.com'.toLowerCase();
+                  const isMasterAdmin = isMasterAdminEmail(u.email);
                   return (
                     <tr key={u.uid} className="hover:bg-slate-50/70">
                       <td className="py-3 px-3">
