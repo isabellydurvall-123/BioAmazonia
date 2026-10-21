@@ -1,0 +1,6 @@
+{
+  "name": "BioAmazônia - Bioquímica de Frutos Amazônicos",
+  "description": "Plataforma científica de caracterização fitoquímica, estabilidade nutricional e bioeconomia sustentável de frutos da Amazônia.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

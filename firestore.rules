@@ -1,0 +1,348 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Safety Net: Default-deny all unmapped paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Primitivas de Segurança Global
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isCurrentUser(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Verifica se o usuário é administrador registrado ou usuário root do applet
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        (request.auth.token.email != null && request.auth.token.email == 'adailton092991260204@gmail.com')
+      );
+    }
+
+    // Verifica se o usuário é pesquisador aprovado ou pré-autorizado por e-mail
+    function isPreAuthorizedResearcher() {
+      return isSignedIn() && request.auth.token.email != null && (
+        exists(/databases/$(database)/documents/authorized_emails/$(request.auth.token.email))
+      );
+    }
+
+    function isResearcher() {
+      return isSignedIn() && (
+        isAdmin() ||
+        isPreAuthorizedResearcher() ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['researcher', 'admin'])
+      );
+    }
+
+    // Validador de Perfil de Usuário
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['uid', 'email', 'role']) &&
+             data.keys().hasOnly(['uid', 'email', 'displayName', 'role', 'institution', 'createdAt', 'updatedAt']) &&
+             data.uid is string && data.uid.size() <= 128 &&
+             data.email is string && data.email.size() <= 150 &&
+             data.role in ['admin', 'researcher', 'visitor'];
+    }
+
+    // Validador de Registro Experimental
+    function isValidExperimentRecord(data) {
+      return data.keys().hasAll([
+        'id', 'experimentType', 'fruitOrSample', 'sampleCode', 
+        'experimentalCondition', 'dateTime', 'methodUsed', 'units', 
+        'status', 'authorUid'
+      ]) &&
+      data.keys().hasOnly([
+        'id', 'experimentType', 'fruitOrSample', 'sampleCode', 
+        'experimentalCondition', 'dateTime', 'methodUsed', 'units', 
+        'measuredValues', 'observations', 'scientificInterpretation', 
+        'photoUrl', 'responsibleName', 'status', 'dataSource', 'authorUid', 'authorEmail',
+        'createdAt', 'updatedAt'
+      ]) &&
+      data.id is string && data.id.size() <= 128 &&
+      data.experimentType in ['vitamina-c', 'oxidacao-enzimatica', 'ph-antocianinas'] &&
+      data.fruitOrSample is string && data.fruitOrSample.size() > 0 && data.fruitOrSample.size() <= 150 &&
+      data.sampleCode is string && data.sampleCode.size() > 0 && data.sampleCode.size() <= 60 &&
+      data.experimentalCondition is string && data.experimentalCondition.size() > 0 && data.experimentalCondition.size() <= 150 &&
+      data.dateTime is string && data.dateTime.size() <= 40 &&
+      data.methodUsed is string && data.methodUsed.size() <= 200 &&
+      data.units is string && data.units.size() <= 80 &&
+      data.status in ['rascunho', 'em_revisao', 'publicado'] &&
+      (!('dataSource' in data) || data.dataSource in ['cientifico_real', 'demonstracao_inicial']) &&
+      data.authorUid is string && data.authorUid.size() <= 128;
+    }
+
+    // Validador de Referência Científica
+    function isValidScientificReference(data) {
+      return data.keys().hasAll([
+        'id', 'authors', 'title', 'year', 'journal', 'publicationType', 'verificationStatus'
+      ]) &&
+      data.keys().hasOnly([
+        'id', 'authors', 'title', 'year', 'journal', 'volumeAndPages', 'doi', 'url',
+        'publicationType', 'relatedContents', 'relatedFruits', 'relatedExperiments',
+        'abstract', 'keywords', 'fruitFocus', 'createdAt', 'verificationStatus'
+      ]) &&
+      data.id is string && data.id.size() <= 128 &&
+      data.authors is string && data.authors.size() > 0 && data.authors.size() <= 500 &&
+      data.title is string && data.title.size() > 0 && data.title.size() <= 500 &&
+      data.year is number && data.year >= 1900 &&
+      data.journal is string && data.journal.size() > 0 && data.journal.size() <= 300 &&
+      data.publicationType in [
+        'Artigo Científico em Periódico Indexado',
+        'Livro Técnico / Capítulo',
+        'Norma Técnica / Farmacopeia',
+        'Comunicado Técnico / Manual Institucional',
+        'Tese / Dissertação Acadêmica'
+      ] &&
+      data.verificationStatus in [
+        'Validada por Literatura Indexada',
+        'Fonte Institucional Oficial',
+        'Em Verificação'
+      ];
+    }
+
+    // Validador de Diretriz de Conservação Nutricional
+    function isValidConservationGuideline(data) {
+      return data.keys().hasAll([
+        'id', 'fruitId', 'fruitCommonName', 'scientificName', 'storageCondition',
+        'recommendation', 'compoundTarget', 'sourceType', 'sourceCitation', 'applicationLimitations'
+      ]) &&
+      data.keys().hasOnly([
+        'id', 'fruitId', 'fruitCommonName', 'scientificName', 'storageCondition',
+        'recommendation', 'compoundTarget', 'sourceType', 'sourceCitation', 'sourceUrl',
+        'relatedReferenceId', 'updatedAt', 'applicationLimitations'
+      ]) &&
+      data.id is string && data.id.size() <= 128 &&
+      data.fruitId in ['camu-camu', 'acai', 'tucuma', 'buriti', 'cubiu'] &&
+      data.fruitCommonName is string && data.fruitCommonName.size() <= 100 &&
+      data.scientificName is string && data.scientificName.size() <= 120 &&
+      data.storageCondition is string && data.storageCondition.size() <= 200 &&
+      data.recommendation is string && data.recommendation.size() <= 1500 &&
+      data.compoundTarget is string && data.compoundTarget.size() <= 150 &&
+      data.sourceType in [
+        'Literatura Indexada',
+        'Institucional (EMBRAPA / INPA)',
+        'Observação Experimental do Projeto'
+      ] &&
+      data.sourceCitation is string && data.sourceCitation.size() <= 300 &&
+      data.applicationLimitations is string && data.applicationLimitations.size() <= 1500;
+    }
+
+    // Validador de Espécie de Fruto
+    function isValidFruitSpecies(data) {
+      return data.keys().hasAll([
+        'id', 'popularName', 'scientificName', 'family', 'description', 'publicationStatus'
+      ]) &&
+      data.id is string && data.id.size() <= 128 &&
+      data.popularName is string && data.popularName.size() > 0 && data.popularName.size() <= 120 &&
+      data.scientificName is string && data.scientificName.size() > 0 && data.scientificName.size() <= 150 &&
+      data.family is string && data.family.size() <= 100 &&
+      data.description is string && data.description.size() <= 3500 &&
+      data.publicationStatus in [
+        'Publicado e Validado', 'Em Revisão por Pares', 'Pendente de Verificação',
+        'publicado', 'em_revisao', 'rascunho'
+      ];
+    }
+
+    // Validador de Tópico Educativo
+    function isValidEducationalTopic(data) {
+      return data.keys().hasAll([
+        'id', 'title', 'category', 'shortSummary', 'verificationStatus'
+      ]) &&
+      data.id is string && data.id.size() <= 128 &&
+      data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+      data.category in ['Fundamentos Moleculares', 'Classes Fitoquímicas', 'Cinética & Estabilidade'] &&
+      data.shortSummary is string && data.shortSummary.size() <= 1500 &&
+      data.verificationStatus in [
+        'Validado por Literatura Indexada', 'Em Revisão por Pares', 'Pendente de Verificação',
+        'publicado', 'em_revisao', 'rascunho'
+      ];
+    }
+
+    // =========================================================================
+    // COLEÇÃO: /users/{userId}
+    // =========================================================================
+    match /users/{userId} {
+      allow get: if isCurrentUser(userId) || isAdmin();
+      allow list: if isAdmin();
+      
+      // Criação de perfil: Admin, ou o próprio usuário (com role 'visitor', ou 'researcher' se pré-autorizado pelo admin)
+      allow create: if isValidId(userId) && isValidUserProfile(incoming()) && (
+        isAdmin() || 
+        (isCurrentUser(userId) && (incoming().role == 'visitor' || (isPreAuthorizedResearcher() && incoming().role == 'researcher')))
+      );
+
+      // Usuário comum não pode alterar arbitrariamente seu próprio 'role' (a menos que seja pré-autorizado como pesquisador)
+      allow update: if isValidId(userId) && isValidUserProfile(incoming()) && (
+        isAdmin() || (
+          isCurrentUser(userId) &&
+          (incoming().role == existing().role || (isPreAuthorizedResearcher() && incoming().role == 'researcher')) &&
+          incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'institution', 'updatedAt', 'role'])
+        )
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // =========================================================================
+    // COLEÇÃO: /authorized_emails/{email}
+    // =========================================================================
+    match /authorized_emails/{email} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // =========================================================================
+    // COLEÇÃO: /admins/{adminId}
+    // =========================================================================
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // =========================================================================
+    // COLEÇÃO: /experiments/{experimentId}
+    // =========================================================================
+    match /experiments/{experimentId} {
+      // Leitura de registros:
+      // Visitantes e público em geral podem ler registros publicados
+      // Pesquisadores autenticados e admins podem ler rascunhos e registros em revisão
+      allow get: if (
+        resource.data.status == 'publicado' ||
+        (isSignedIn() && (resource.data.authorUid == request.auth.uid || isResearcher() || isAdmin()))
+      );
+
+      allow list: if (
+        resource.data.status == 'publicado' ||
+        (isSignedIn() && (resource.data.authorUid == request.auth.uid || isResearcher() || isAdmin()))
+      );
+
+      // Criação: Apenas pesquisadores autenticados ou admins
+      allow create: if isSignedIn() && isResearcher() && isValidId(experimentId) &&
+        isValidExperimentRecord(incoming()) &&
+        incoming().authorUid == request.auth.uid;
+
+      // Edição: Apenas o próprio autor pesquisador ou administradores
+      allow update: if isSignedIn() && isValidId(experimentId) && isValidExperimentRecord(incoming()) && (
+        isAdmin() || (
+          isResearcher() &&
+          existing().authorUid == request.auth.uid &&
+          incoming().authorUid == existing().authorUid &&
+          (existing().status != 'publicado' || isAdmin())
+        )
+      );
+
+      // Exclusão: Apenas o autor (se não estiver publicado) ou administradores
+      allow delete: if isSignedIn() && isValidId(experimentId) && (
+        isAdmin() || (
+          isResearcher() &&
+          existing().authorUid == request.auth.uid &&
+          existing().status != 'publicado'
+        )
+      );
+    }
+
+    // =========================================================================
+    // COLEÇÃO: /references/{referenceId}
+    // =========================================================================
+    match /references/{referenceId} {
+      // Leitura pública irrestrita para transparência científica
+      allow get: if true;
+      allow list: if true;
+
+      // Criação e atualização por pesquisadores ou administradores
+      allow create: if isSignedIn() && isResearcher() && isValidId(referenceId) && isValidScientificReference(incoming());
+      allow update: if isSignedIn() && isResearcher() && isValidId(referenceId) && isValidScientificReference(incoming());
+
+      // Exclusão restrita a administradores curadores
+      allow delete: if isAdmin();
+    }
+
+    // =========================================================================
+    // COLEÇÃO: /conservation/{guidelineId}
+    // =========================================================================
+    match /conservation/{guidelineId} {
+      // Leitura pública irrestrita para produtores, estudantes e visitantes
+      allow get: if true;
+      allow list: if true;
+
+      // Criação e atualização por pesquisadores ou administradores
+      allow create: if isSignedIn() && isResearcher() && isValidId(guidelineId) && isValidConservationGuideline(incoming());
+      allow update: if isSignedIn() && isResearcher() && isValidId(guidelineId) && isValidConservationGuideline(incoming());
+
+      // Exclusão restrita a administradores curadores
+      allow delete: if isAdmin();
+    }
+
+    // =========================================================================
+    // COLEÇÃO: /fruits/{fruitId}
+    // =========================================================================
+    match /fruits/{fruitId} {
+      // Leitura pública de espécies validadas/publicadas; autenticados leem rascunhos
+      allow get: if (
+        resource.data.publicationStatus in ['Publicado e Validado', 'publicado'] ||
+        (isSignedIn() && (isResearcher() || isAdmin()))
+      );
+      allow list: if (
+        resource.data.publicationStatus in ['Publicado e Validado', 'publicado'] ||
+        (isSignedIn() && (isResearcher() || isAdmin()))
+      );
+
+      // Criação e atualização por pesquisadores ou administradores
+      allow create: if isSignedIn() && isResearcher() && isValidId(fruitId) && isValidFruitSpecies(incoming());
+      allow update: if isSignedIn() && isValidId(fruitId) && isValidFruitSpecies(incoming()) && (
+        isAdmin() || (
+          isResearcher() &&
+          (existing().publicationStatus != 'Publicado e Validado' && existing().publicationStatus != 'publicado' || isAdmin())
+        )
+      );
+
+      // Exclusão restrita a administradores
+      allow delete: if isAdmin();
+    }
+
+    // =========================================================================
+    // COLEÇÃO: /topics/{topicId}
+    // =========================================================================
+    match /topics/{topicId} {
+      // Leitura pública para tópicos validados/publicados
+      allow get: if (
+        resource.data.verificationStatus in ['Validado por Literatura Indexada', 'publicado'] ||
+        (isSignedIn() && (isResearcher() || isAdmin()))
+      );
+      allow list: if (
+        resource.data.verificationStatus in ['Validado por Literatura Indexada', 'publicado'] ||
+        (isSignedIn() && (isResearcher() || isAdmin()))
+      );
+
+      // Criação e edição por pesquisadores e administradores
+      allow create: if isSignedIn() && isResearcher() && isValidId(topicId) && isValidEducationalTopic(incoming());
+      allow update: if isSignedIn() && isValidId(topicId) && isValidEducationalTopic(incoming()) && (
+        isAdmin() || (
+          isResearcher() &&
+          (existing().verificationStatus != 'Validado por Literatura Indexada' && existing().verificationStatus != 'publicado' || isAdmin())
+        )
+      );
+
+      // Exclusão restrita a administradores
+      allow delete: if isAdmin();
+    }
+
+  }
+}

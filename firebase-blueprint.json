@@ -1,0 +1,210 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Perfil de usuário e credenciais de acesso no BioAmazônia",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 150 },
+        "displayName": { "type": "string", "maxLength": 120 },
+        "role": { "type": "string", "enum": ["admin", "researcher", "visitor"] },
+        "institution": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "ExperimentRecord": {
+      "title": "ExperimentRecord",
+      "description": "Registro científico de ensaio experimental de bancada",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "experimentType": { "type": "string", "enum": ["vitamina-c", "oxidacao-enzimatica", "ph-antocianinas"] },
+        "fruitOrSample": { "type": "string", "maxLength": 150 },
+        "sampleCode": { "type": "string", "maxLength": 60 },
+        "experimentalCondition": { "type": "string", "maxLength": 150 },
+        "dateTime": { "type": "string", "maxLength": 40 },
+        "methodUsed": { "type": "string", "maxLength": 200 },
+        "units": { "type": "string", "maxLength": 80 },
+        "measuredValues": { "type": "object" },
+        "observations": { "type": "string", "maxLength": 1500 },
+        "scientificInterpretation": { "type": "string", "maxLength": 1500 },
+        "photoUrl": { "type": "string", "maxLength": 400 },
+        "responsibleName": { "type": "string", "maxLength": 120 },
+        "status": { "type": "string", "enum": ["rascunho", "em_revisao", "publicado"] },
+        "dataSource": { "type": "string", "enum": ["cientifico_real", "demonstracao_inicial"] },
+        "authorUid": { "type": "string", "maxLength": 128 },
+        "authorEmail": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": [
+        "id",
+        "experimentType",
+        "fruitOrSample",
+        "sampleCode",
+        "experimentalCondition",
+        "dateTime",
+        "methodUsed",
+        "units",
+        "status",
+        "authorUid"
+      ]
+    },
+    "ScientificReference": {
+      "title": "ScientificReference",
+      "description": "Registro de publicação ou documento científico indexado",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "authors": { "type": "string", "maxLength": 500 },
+        "title": { "type": "string", "maxLength": 500 },
+        "year": { "type": "number" },
+        "journal": { "type": "string", "maxLength": 300 },
+        "volumeAndPages": { "type": "string", "maxLength": 150 },
+        "doi": { "type": "string", "maxLength": 200 },
+        "url": { "type": "string", "maxLength": 500 },
+        "publicationType": { 
+          "type": "string", 
+          "enum": [
+            "Artigo Científico em Periódico Indexado",
+            "Livro Técnico / Capítulo",
+            "Norma Técnica / Farmacopeia",
+            "Comunicado Técnico / Manual Institucional",
+            "Tese / Dissertação Acadêmica"
+          ] 
+        },
+        "relatedContents": { "type": "array", "items": { "type": "string" } },
+        "relatedFruits": { "type": "array", "items": { "type": "string" } },
+        "relatedExperiments": { "type": "array", "items": { "type": "string" } },
+        "abstract": { "type": "string", "maxLength": 2000 },
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "fruitFocus": { "type": "string", "maxLength": 200 },
+        "createdAt": { "type": "string" },
+        "verificationStatus": { 
+          "type": "string", 
+          "enum": [
+            "Validada por Literatura Indexada",
+            "Fonte Institucional Oficial",
+            "Em Verificação"
+          ] 
+        }
+      },
+      "required": ["id", "authors", "title", "year", "journal", "publicationType", "verificationStatus"]
+    },
+    "ConservationGuideline": {
+      "title": "ConservationGuideline",
+      "description": "Diretriz técnica de conservação e pós-colheita de fruto amazônico",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "fruitId": { "type": "string", "enum": ["camu-camu", "acai", "tucuma", "buriti", "cubiu"] },
+        "fruitCommonName": { "type": "string", "maxLength": 100 },
+        "scientificName": { "type": "string", "maxLength": 120 },
+        "storageCondition": { "type": "string", "maxLength": 200 },
+        "recommendation": { "type": "string", "maxLength": 1500 },
+        "compoundTarget": { "type": "string", "maxLength": 150 },
+        "sourceType": { 
+          "type": "string", 
+          "enum": [
+            "Literatura Indexada",
+            "Institucional (EMBRAPA / INPA)",
+            "Observação Experimental do Projeto"
+          ] 
+        },
+        "sourceCitation": { "type": "string", "maxLength": 300 },
+        "sourceUrl": { "type": "string", "maxLength": 500 },
+        "relatedReferenceId": { "type": "string", "maxLength": 128 },
+        "updatedAt": { "type": "string" },
+        "applicationLimitations": { "type": "string", "maxLength": 1500 }
+      },
+      "required": ["id", "fruitId", "fruitCommonName", "scientificName", "storageCondition", "recommendation", "compoundTarget", "sourceType", "sourceCitation", "applicationLimitations"]
+    },
+    "FruitSpecies": {
+      "title": "FruitSpecies",
+      "description": "Ficha botânica e fitoquímica de espécie frutífera amazônica",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "popularName": { "type": "string", "maxLength": 120 },
+        "scientificName": { "type": "string", "maxLength": 150 },
+        "family": { "type": "string", "maxLength": 100 },
+        "botanicalSynonyms": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": "string", "maxLength": 2500 },
+        "morphology": { "type": "string", "maxLength": 2000 },
+        "habitat": { "type": "string", "maxLength": 1500 },
+        "harvestPeriod": { "type": "string", "maxLength": 500 },
+        "bioactiveCompounds": { "type": "array" },
+        "nutritionalInfo": { "type": "array" },
+        "stabilityFactors": { "type": "array" },
+        "conservationGuidelines": { "type": "object" },
+        "scientificReferences": { "type": "array" },
+        "authorizedPhotographs": { "type": "array" },
+        "updatedAt": { "type": "string" },
+        "publicationStatus": { 
+          "type": "string", 
+          "enum": ["Publicado e Validado", "Em Revisão por Pares", "Pendente de Verificação", "rascunho", "em_revisao", "publicado"] 
+        }
+      },
+      "required": ["id", "popularName", "scientificName", "family", "description", "publicationStatus"]
+    },
+    "EducationalTopic": {
+      "title": "EducationalTopic",
+      "description": "Conteúdo e tópico educativo fitoquímico e bioquímico",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "order": { "type": "number" },
+        "category": { "type": "string", "enum": ["Fundamentos Moleculares", "Classes Fitoquímicas", "Cinética & Estabilidade"] },
+        "title": { "type": "string", "maxLength": 200 },
+        "shortSummary": { "type": "string", "maxLength": 1000 },
+        "introduction": { "type": "string", "maxLength": 3000 },
+        "accessibleExplanation": { "type": "string", "maxLength": 3000 },
+        "scientificDetail": { "type": "string", "maxLength": 4000 },
+        "fruitExamples": { "type": "array" },
+        "experimentalRelevance": { "type": "string", "maxLength": 2000 },
+        "scientificLimitations": { "type": "string", "maxLength": 2000 },
+        "relatedTopicIds": { "type": "array", "items": { "type": "string" } },
+        "references": { "type": "array" },
+        "updatedAt": { "type": "string" },
+        "verificationStatus": { 
+          "type": "string", 
+          "enum": ["Validado por Literatura Indexada", "Em Revisão por Pares", "Pendente de Verificação", "rascunho", "em_revisao", "publicado"] 
+        }
+      },
+      "required": ["id", "title", "category", "shortSummary", "verificationStatus"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "UserProfile" },
+      "description": "Perfis de usuários, pesquisadores e administradores"
+    },
+    "/experiments/{experimentId}": {
+      "schema": { "$ref": "ExperimentRecord" },
+      "description": "Coleção central de registros experimentais dos três módulos"
+    },
+    "/references/{referenceId}": {
+      "schema": { "$ref": "ScientificReference" },
+      "description": "Repositório verificável de referências científicas do projeto"
+    },
+    "/conservation/{guidelineId}": {
+      "schema": { "$ref": "ConservationGuideline" },
+      "description": "Diretrizes técnicas de conservação nutricional e pós-colheita"
+    },
+    "/fruits/{fruitId}": {
+      "schema": { "$ref": "FruitSpecies" },
+      "description": "Acervo botânico e fitoquímico com fotografias e estado de publicação"
+    },
+    "/topics/{topicId}": {
+      "schema": { "$ref": "EducationalTopic" },
+      "description": "Módulos educativos de bioquímica da longevidade e antioxidantes"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "UserProfile" },
+      "description": "Lista de administradores autorizados do sistema"
+    }
+  }
+}
