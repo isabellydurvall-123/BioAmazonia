@@ -64,7 +64,7 @@ export function usePWAInstall() {
     };
   }, []);
 
-  const install = useCallback(async (): Promise<'accepted' | 'dismissed' | 'manual_needed'> => {
+  const install = useCallback(async (): Promise<'prompted' | 'manual_needed'> => {
     const promptToUse = deferredPrompt || capturedPrompt;
     if (!promptToUse) {
       // Native prompt not supported or not triggered yet (standard on iOS and some mobile browsers)
@@ -73,16 +73,21 @@ export function usePWAInstall() {
 
     try {
       await promptToUse.prompt();
-      const { outcome } = await promptToUse.userChoice;
-      if (outcome === 'accepted') {
-        setIsInstalled(true);
-        capturedPrompt = null;
-        setDeferredPrompt(null);
-        return 'accepted';
-      }
-      return 'dismissed';
+      capturedPrompt = null;
+      setDeferredPrompt(null);
+      void promptToUse.userChoice.then(
+        ({ outcome }) => {
+          if (outcome === 'accepted') {
+            setIsInstalled(true);
+          }
+        },
+        (error: unknown) => {
+          console.error('Não foi possível obter a resposta à instalação do app:', error);
+        },
+      );
+      return 'prompted';
     } catch (err) {
-      console.warn('Erro ao disparar prompt de instalação:', err);
+      console.error('Erro ao disparar prompt de instalação:', err);
       return 'manual_needed';
     }
   }, [deferredPrompt]);

@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="512" height="512" rx="112" fill="#064d3f"/>
-  <text x="50%" y="54%" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="240" letter-spacing="-8">BA</text>
+  <rect width="512" height="512" rx="96" fill="#1b4332"/>
+  <circle cx="256" cy="256" r="210" fill="#2d6a4f" opacity="0.3"/>
+  <!-- Folha e ramo estilizados botânicos -->
+  <path d="M256 96 C160 160 140 280 200 370 C230 415 256 424 256 424 C256 424 282 415 312 370 C372 280 352 160 256 96 Z" fill="#d8f3dc"/>
+  <path d="M256 120 L256 390" stroke="#1b4332" stroke-width="12" stroke-linecap="round"/>
+  <path d="M256 200 C220 220 190 240 180 270" stroke="#1b4332" stroke-width="10" stroke-linecap="round"/>
+  <path d="M256 260 C290 280 320 300 330 330" stroke="#1b4332" stroke-width="10" stroke-linecap="round"/>
+  <!-- Frutos estilizados em torno da nervura -->
+  <circle cx="170" cy="275" r="22" fill="#581c87"/>
+  <circle cx="340" cy="335" r="22" fill="#ea580c"/>
+  <circle cx="256" cy="115" r="16" fill="#16a34a"/>
 </svg>

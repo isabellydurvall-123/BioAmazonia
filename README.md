@@ -49,14 +49,13 @@ O projeto tem como foco central a cinética de degradação e a estabilidade de 
 
 A base de dados contempla 6 espécies amazônicas com caracterização morfológica, perfil cromatográfico e nutricional:
 
-| Fruto                | Nome científico                                       | Família Botânica | Composto Chave                                           |
-| -------------------- | ----------------------------------------------------- | ---------------- | -------------------------------------------------------- |
-| **Camu-camu**        | _Myrciaria dubia_ (Kunth) McVaugh                     | Myrtaceae        | Ácido L-ascórbico (Vitamina C: 1.600 a 6.110 mg/100g)    |
-| **Açaí-do-Amazonas** | _Euterpe precatoria_ Mart.                            | Arecaceae        | Cianidina-3-rutinosídeo e cianidina-3-glicosídeo         |
-| **Tucumã**           | _Astrocaryum aculeatum_ G.Mey.                        | Arecaceae        | Beta-caroteno e carotenoides totais (pró-vitamina A)     |
-| **Buriti**           | _Mauritia flexuosa_ L.f.                              | Arecaceae        | Carotenoides lipofílicos e ácidos graxos monoinsaturados |
-| **Cubiu**            | _Solanum sessiliflorum_ Dunal                         | Solanaceae       | Niacina, pectina e ácidos orgânicos (cítrico e málico)   |
-| **Cupuaçu**          | _Theobroma grandiflorum_ (Willd. ex Spreng.) K.Schum. | Malvaceae        | Polifenóis, ácido ascórbico e teobromina                 |
+| Fruto                | Nome científico                   | Família Botânica | Composto Chave                                           |
+| -------------------- | --------------------------------- | ---------------- | -------------------------------------------------------- |
+| **Camu-camu**        | _Myrciaria dubia_ (Kunth) McVaugh | Myrtaceae        | Ácido L-ascórbico (Vitamina C: 1.600 a 6.110 mg/100g)    |
+| **Açaí-do-Amazonas** | _Euterpe precatoria_ Mart.        | Arecaceae        | Cianidina-3-rutinosídeo e cianidina-3-glicosídeo         |
+| **Tucumã**           | _Astrocaryum aculeatum_ G.Mey.    | Arecaceae        | Beta-caroteno e carotenoides totais (pró-vitamina A)     |
+| **Buriti**           | _Mauritia flexuosa_ L.f.          | Arecaceae        | Carotenoides lipofílicos e ácidos graxos monoinsaturados |
+| **Cubiu**            | _Solanum sessiliflorum_ Dunal     | Solanaceae       | Niacina, pectina e ácidos orgânicos (cítrico e málico)   |
 
 > **Critério Científico:** Todas as informações foram fundamentadas em referências públicas verificáveis (EMBRAPA, SciELO, PubMed, INPA). Resultados obtidos nos ensaios práticos são sinalizados distintamente dos dados da literatura.
 
