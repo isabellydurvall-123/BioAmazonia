@@ -11,15 +11,29 @@ export default defineConfig(() => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['apple-touch-icon.png', 'icon.svg', 'pwa-192x192.png', 'pwa-512x512.png'],
+        includeAssets: [
+          'iconeBA.png',
+          'apple-touch-icon.png',
+          'apple-touch-icon-precomposed.png',
+          'favicon.png',
+          'icon.svg',
+          'pwa-192x192.png',
+          'pwa-512x512.png',
+          'pwa-maskable-512x512.png',
+          'icons/icon-192x192.png',
+          'icons/icon-512x512.png',
+          'icons/icon-maskable-512x512.png'
+        ],
         manifest: {
           id: '/',
           name: 'BioAmazônia - Bioquímica de Frutos Amazônicos',
           short_name: 'BioAmazônia',
           description: 'Plataforma científica de caracterização fitoquímica, estabilidade nutricional e conservação de frutos da Amazônia.',
-          theme_color: '#1b4332',
-          background_color: '#fbfcfb',
+          theme_color: '#064d3f',
+          background_color: '#064d3f',
           display: 'standalone',
+          orientation: 'portrait-primary',
+          lang: 'pt-BR',
           start_url: '/',
           scope: '/',
           icons: [
@@ -37,6 +51,18 @@ export default defineConfig(() => {
             },
             {
               src: '/pwa-maskable-512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable',
+            },
+            {
+              src: '/iconeBA.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any',
+            },
+            {
+              src: '/iconeBA.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'maskable',

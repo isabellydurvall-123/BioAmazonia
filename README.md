@@ -5,189 +5,186 @@
 </p>
 
 <p align="center">
-  Uma plataforma web dedicada ao estudo da estabilidade de compostos antioxidantes em frutos amazônicos, reunindo conteúdos científicos, experimentos, registros de dados e informações sobre conservação nutricional.
+  Uma plataforma web e PWA dedicada ao estudo da estabilidade de compostos antioxidantes em frutos nativos da Amazônia, reunindo conteúdos científicos, experimentos laboratoriais de bancada, registros de dados físico-químicos e diretrizes para conservação pós-colheita.
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Projeto-Pesquisa%20Cient%C3%ADfica-006B52?style=for-the-badge" alt="Pesquisa científica">
-  <img src="https://img.shields.io/badge/Status-Em%20desenvolvimento-D9A441?style=for-the-badge" alt="Em desenvolvimento">
+  <img src="https://img.shields.io/badge/Status-Em%20Produção-064d3f?style=for-the-badge" alt="Em Produção">
+  <img src="https://img.shields.io/badge/PWA-Instalável%20Offline-1b4332?style=for-the-badge" alt="PWA Offline">
+  <img src="https://img.shields.io/badge/TypeScript-React%2019-3178C6?style=for-the-badge" alt="TypeScript React">
 </p>
 
 ---
 
 ## 📖 Sobre o projeto
 
-O **BioAmazônia** é uma plataforma web desenvolvida para apoiar a investigação científica e a divulgação de conhecimentos sobre compostos bioativos presentes em frutos da Amazônia.
+O **BioAmazônia** é uma plataforma técnico-científica progressiva (PWA) desenvolvida para apoiar a investigação experimental e a divulgação de conhecimentos rigorosos sobre metabólitos secundários e compostos bioativos presentes em frutos da Amazônia.
 
-O projeto tem como foco o estudo da estabilidade de compostos antioxidantes e dos fatores que podem influenciar suas características, como condições de armazenamento, temperatura, exposição ao ambiente e variações de pH.
+O projeto tem como foco central a cinética de degradação e a estabilidade de antioxidantes sob diferentes fatores ambientais e tecnológicos, tais como:
 
-A plataforma busca aproximar ciência e tecnologia por meio de um ambiente digital que organiza informações, facilita o registro de experimentos e permite consultar resultados científicos de maneira clara e acessível.
+- Condições de armazenamento e refrigeração/congelamento.
+- Oxigênio atmosférico e métodos de desoxigenação (desaeramento e vácuo).
+- Exposição luminosa (radiação ultravioleta e visível).
+- Variações de potencial hidrogeniônico (pH).
+- Tratamentos térmicos (branqueamento e pasteurização).
 
-**Título da pesquisa:** *Bioquímica da Longevidade: Análise da Estabilidade de Compostos Antioxidantes em Frutos Amazônicos e sua Relação com a Promoção da Saúde Celular.*
+**Título da pesquisa:** _Bioquímica da Longevidade: Análise da Estabilidade de Compostos Antioxidantes em Frutos Amazônicos e sua Relação com a Promoção da Saúde Celular._
+
+---
 
 ## 🎯 Objetivos
 
-- Organizar informações científicas sobre frutos amazônicos e seus compostos bioativos.
-- Disponibilizar conteúdos educativos sobre bioquímica, antioxidantes e estabilidade nutricional.
-- Apoiar o registro e a análise de experimentos laboratoriais.
-- Apresentar resultados por meio de tabelas e gráficos.
-- Reunir referências científicas para consulta e aprofundamento.
-- Divulgar informações sobre conservação de frutos e estabilidade de seus componentes.
-- Facilitar o acesso aos dados experimentais por meio de uma tabela digital.
+- **Catalogação Fitoquímica:** Organizar dados botânicos e físico-químicos sobre espécies frutíferas amazônicas e seus teores de metabólitos secundários.
+- **Educação Científica:** Disponibilizar módulos didáticos estruturados sobre termodinâmica redox (HAT / SET), radicais livres, peroxidação lipídica e sinergia de matrizes vegetais nativas.
+- **Registro Experimental de Bancada:** Facilitar a inserção, validação estatística e arquivamento de ensaios com controle de lotes, replicatas e rastreabilidade metodológica.
+- **Tabela Dinâmica de Estabilidade:** Permitir filtragem multidimensional, visualização gráfica e exportação de dados analíticos brutos em CSV.
+- **Guia Digital de Conservação:** Compilar recomendações técnicas baseadas na literatura indexada (EMBRAPA, INPA, SciELO, PubMed) e em observações laboratoriais próprias.
+- **Repositório Bibliográfico:** Indexar referências científicas completas com links diretos, DOIs e autores verificados.
+- **Funcionamento Offline (PWA):** Assegurar o acesso contínuo aos catálogos e registros em campo ou em áreas remotas da floresta, mesmo sem conexão com a internet.
 
-## 🍇 Frutos estudados
+---
 
-O catálogo científico contempla cinco frutos amazônicos:
+## 🍇 Frutos Estudados no Catálogo
 
-| Fruto | Nome científico |
-|---|---|
-| Camu-camu | *Myrciaria dubia* |
-| Açaí-do-Amazonas | *Euterpe precatoria* |
-| Tucumã | *Astrocaryum aculeatum* |
-| Buriti | *Mauritia flexuosa* |
-| Cubiu | *Solanum sessiliflorum* |
+A base de dados contempla 6 espécies amazônicas com caracterização morfológica, perfil cromatográfico e nutricional:
 
-As informações apresentadas devem ser fundamentadas em referências científicas verificáveis. Os resultados experimentais próprios devem ser identificados separadamente dos dados provenientes da literatura.
+| Fruto                | Nome científico                                       | Família Botânica | Composto Chave                                           |
+| -------------------- | ----------------------------------------------------- | ---------------- | -------------------------------------------------------- |
+| **Camu-camu**        | _Myrciaria dubia_ (Kunth) McVaugh                     | Myrtaceae        | Ácido L-ascórbico (Vitamina C: 1.600 a 6.110 mg/100g)    |
+| **Açaí-do-Amazonas** | _Euterpe precatoria_ Mart.                            | Arecaceae        | Cianidina-3-rutinosídeo e cianidina-3-glicosídeo         |
+| **Tucumã**           | _Astrocaryum aculeatum_ G.Mey.                        | Arecaceae        | Beta-caroteno e carotenoides totais (pró-vitamina A)     |
+| **Buriti**           | _Mauritia flexuosa_ L.f.                              | Arecaceae        | Carotenoides lipofílicos e ácidos graxos monoinsaturados |
+| **Cubiu**            | _Solanum sessiliflorum_ Dunal                         | Solanaceae       | Niacina, pectina e ácidos orgânicos (cítrico e málico)   |
+| **Cupuaçu**          | _Theobroma grandiflorum_ (Willd. ex Spreng.) K.Schum. | Malvaceae        | Polifenóis, ácido ascórbico e teobromina                 |
 
-## 🔬 Experimentos científicos
+> **Critério Científico:** Todas as informações foram fundamentadas em referências públicas verificáveis (EMBRAPA, SciELO, PubMed, INPA). Resultados obtidos nos ensaios práticos são sinalizados distintamente dos dados da literatura.
 
-A proposta contempla três linhas experimentais:
+---
 
-### 1. Estabilidade da vitamina C
+## 🔬 Linhas Experimentais de Bancada
 
-Investiga alterações relacionadas à vitamina C em amostras de frutos submetidas a diferentes condições de conservação e tratamento, utilizando um protocolo experimental definido.
+A plataforma organiza 3 módulos de ensaios experimentais:
 
-### 2. Oxidação enzimática
+### 1. Estabilidade da Vitamina C (Titulação Iodométrica)
 
-Observa o escurecimento de amostras de maçã sob diferentes condições experimentais, com registro de tempo, imagens e observações.
+- **Método:** Oxirredução com solução de iodo padronizada em meio ácido, utilizando dispersão de amido como indicador do ponto de viragem.
+- **Matrizes:** Polpas de Camu-camu (_Myrciaria dubia_) e Cubiu (_Solanum sessiliflorum_).
+- **Tratamentos:** Polpa fresca (controle basal), refrigeração (4°C por 24h a 72h), congelamento (-18°C), tratamento térmico/fervura e exposição à luz UV.
 
-### 3. Influência do pH nas antocianinas
+### 2. Oxidação Enzimática & Escurecimento (Polifenoloxidase - PPO)
 
-Investiga alterações de cor em extratos de açaí submetidos a diferentes condições de pH, considerando as propriedades químicas dos pigmentos.
+- **Método:** Acompanhamento cinético fotográfico com escala visual padronizada de browning (Graus 1 a 5).
+- **Matrizes:** Amostras vegetais sob ação de polifenoloxidases nativas (amostra de maçã como controle analítico rápido, complementada por Buriti e Tucumã).
+- **Tratamentos:** Controle sem aditivos, acidificação por ácido ascórbico nativo de camu-camu, tratamento térmico (inativação por branqueamento) e restrição de oxigênio (imersão em água/vácuo).
 
-> **Nota científica:** mudanças de cor e observações visuais não equivalem, por si só, à quantificação de compostos bioativos ou à medição da capacidade antioxidante. As conclusões devem respeitar os limites dos métodos utilizados.
+### 3. Influência do pH no Cátion Flavílio das Antocianinas
 
-## ✨ Funcionalidades previstas
+- **Método:** Espectrofotometria / colorimetria comparativa em escala tamponada de pH (1,0 a 12,0).
+- **Matriz:** Extrato hidroalcoólico do epicarpo de Açaí (_Euterpe precatoria_).
+- **Equilíbrio Químico:** Transição estrutural reversível entre o cátion flavílio (vermelho vivo em pH < 2,0), base quinoidal anidra (púrpura em pH neutro) e formas chalconas descoloridas ou degradadas em meio alcalino.
 
-- **Catálogo de frutos:** consulta de informações botânicas e bioquímicas.
-- **Conteúdos educativos:** materiais sobre antioxidantes, radicais livres, estresse oxidativo e estabilidade dos compostos.
-- **Registro de experimentos:** organização de amostras, condições, medidas, datas e observações.
-- **Tabelas e gráficos:** visualização de resultados registrados.
-- **Tabela Digital de Estabilidade Nutricional:** consulta filtrável de resultados publicados.
-- **Guia de conservação:** informações sobre conservação dos frutos com referências e condições documentadas.
-- **Referências científicas:** organização de artigos, publicações e identificadores DOI.
-- **Painel administrativo:** gerenciamento de conteúdos, registros e publicações.
-- **Controle de acesso:** separação entre as permissões de administrador e pesquisador de bancada.
-- **Acesso responsivo:** interface adaptável a computadores, tablets e celulares.
-- **PWA:** possibilidade de instalação e acesso a determinados conteúdos sem conexão, conforme os recursos implementados.
+> **Nota Epistêmica:** Variações visuais e medidas colorimétricas qualitativas não substituem a cromatografia líquida de alta eficiência (HPLC). As conclusões expressam com rigor as fronteiras metodológicas dos ensaios de bancada.
 
-*Os recursos estão sujeitos ao estágio de desenvolvimento e à validação de cada módulo.*
+---
 
-## 🛠️ Tecnologias
+## ✨ Funcionalidades da Plataforma
 
-O projeto utiliza ou prevê a utilização das seguintes tecnologias, conforme a implementação de cada módulo:
+- **Catálogo Científico Dinâmico:** Fichas botânicas completas, fotos autorizadas com identificação de espécimes, mapas de sazonalidade e teores nutricionais.
+- **Fundamentação Bioquímica Integrada:** Módulos didáticos dinamicamente sincronizados com os estudos científicos indexados no banco de dados.
+- **Tabela Pública de Estabilidade Nutricional:** Busca textual, filtros combinados por fruto, linha experimental, condição de conversão/armazenamento e datas, com gráficos de barras analíticos e exportação em CSV.
+- **Guia Digital de Conservação Pós-Colheita:** Instruções práticas para produtores e pesquisadores evitarem perdas nutricionais, com vinculação direta aos artigos originais.
+- **Biblioteca de 15 Referências Verificadas:** Artigos indexados da EMBRAPA, SciELO, PubMed e livros de referência com links diretos, DOIs e cópia rápida de citação formatada.
+- **Painel Administrativo do Laboratório:** Gestão de espécies, tópicos didáticos, ensaios de bancada, diretrizes de conservação, referências e usuários com papéis diferenciados.
+- **Progressive Web App (PWA):**
+  - Ícone de identidade oficial **BA** em múltiplas resoluções.
+  - Instalação direta no celular (Android/iOS) e no computador com 1 clique.
+  - Funcionamento offline completo com indicador visual automático de conectividade (_heartbeat ping_).
 
-- **JavaScript:** lógica e funcionalidades da aplicação.
-- **React:** construção de interfaces por componentes, quando utilizado na configuração atual.
-- **Vite:** ambiente de desenvolvimento e compilação.
-- **Firebase Authentication:** autenticação de usuários.
-- **Cloud Firestore:** armazenamento e consulta de dados.
-- **Firebase Storage:** armazenamento de imagens e arquivos, caso habilitado.
-- **HTML5 e CSS3:** estrutura e apresentação da interface.
-- **Netlify:** opção de hospedagem e publicação da aplicação.
+---
 
-## 🔐 Perfis de acesso
+## 🛠️ Tecnologias Utilizadas
 
-O sistema prevê diferentes níveis de permissão para proteger os dados científicos.
+- **Linguagem:** [TypeScript](https://www.typescriptlang.org/) (Strict typing, interfaces modulares).
+- **Framework UI:** [React 19](https://react.dev/) com Hooks e componentes funcionais desacoplados.
+- **Build Tool:** [Vite](https://vitejs.dev/) com compilação instantânea.
+- **PWA & Service Worker:** `vite-plugin-pwa` e Workbox com estratégias _CacheFirst_ e _NetworkFirst_.
+- **Estilização:** [Tailwind CSS v4](https://tailwindcss.com/) com paleta botânica customizada (`#064d3f`).
+- **Backend & Armazenamento:**
+  - **Firebase Authentication:** Gestão de identidades seguras com Google OAuth.
+  - **Cloud Firestore:** Banco de dados NoSQL reativo para persistência de frutos, diretrizes, referências e experimentos.
+  - **Fallback Local Cache:** Sincronização offline transparente via `localStorage` com recuperação automática.
+- **Iconografia:** [Lucide React](https://lucide.dev/).
 
-| Perfil | Responsabilidades |
-|---|---|
-| Administrador / Curador científico | Gerenciar conteúdos, frutos, referências, usuários e permissões, conforme as regras do sistema. |
-| Pesquisador de bancada | Registrar e consultar experimentos, inserir resultados e gerenciar seus registros experimentais dentro das permissões concedidas. |
-| Visitante | Consultar conteúdos e resultados públicos disponibilizados pela plataforma. |
+---
 
-As permissões devem ser verificadas também nas regras do banco de dados e nos serviços de armazenamento, não apenas na interface.
+## 🔐 Perfis de Acesso e Controle de Permissões
 
-## 💻 Como executar localmente
+| Perfil                            | Nível       | Responsabilidades e Capacidades                                                                                                                                                                  |
+| --------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Curador Geral / Administrador** | Total       | Gerenciamento global de espécies, edição de tópicos de bioquímica, homologação e exclusão de experimentos, publicação de diretrizes, cadastro de referências e atribuição de papéis de usuários. |
+| **Pesquisador de Bancada**        | Operacional | Cadastro de novos ensaios laboratoriais, inserção de medidas quantitativas, documentação de observações de campo e envio de registros para publicação.                                           |
+| **Visitante**                     | Consulta    | Acesso irrestrito a todos os dados públicos: fichas de frutos, módulos educativos, tabela de estabilidade, referências e download de relatórios.                                                 |
+
+---
+
+## 💻 Como Executar Localmente
 
 ### Pré-requisitos
 
-Antes de começar, instale:
+- [Node.js](https://nodejs.org/) (versão 18 ou superior).
+- Gerenciador de pacotes `npm`.
+- Git para versionamento de código.
 
-- [Node.js](https://nodejs.org/) — versão compatível com o projeto.
-- [Git](https://git-scm.com/) — para clonar o repositório.
-- Um editor de código, como o [Visual Studio Code](https://code.visualstudio.com/).
-
-Para verificar se o Node.js e o npm estão instalados, execute no terminal:
+Verifique as versões instaladas:
 
 ```bash
 node -v
 npm -v
 ```
 
-### 1. Clone o repositório
-
-Substitua `SEU_USUARIO` pelo nome de usuário ou pela organização proprietária do repositório:
+### 1. Clonar o Repositório
 
 ```bash
 git clone https://github.com/SEU_USUARIO/bioamazonia.git
-```
-
-Entre na pasta do projeto:
-
-```bash
 cd bioamazonia
 ```
 
-### 2. Instale as dependências
+### 2. Instalar as Dependências
 
 ```bash
 npm install
 ```
 
-### 3. Configure as variáveis de ambiente
+### 3. Configurar Variáveis de Ambiente
 
-Se o projeto utilizar Firebase ou outras configurações externas, consulte os arquivos de configuração e o `.env.example`, caso exista.
-
-Em projetos Vite, as variáveis públicas de configuração podem utilizar o prefixo `VITE_`. Por exemplo:
+Crie um arquivo `.env` na raiz do projeto com as chaves do Firebase (utilize o modelo do `.env.example`):
 
 ```env
-VITE_FIREBASE_API_KEY=sua_chave
-VITE_FIREBASE_AUTH_DOMAIN=seu_dominio
-VITE_FIREBASE_PROJECT_ID=seu_projeto
-VITE_FIREBASE_STORAGE_BUCKET=seu_bucket
+VITE_FIREBASE_API_KEY=sua_api_key
+VITE_FIREBASE_AUTH_DOMAIN=seu_projeto.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=seu_projeto_id
+VITE_FIREBASE_STORAGE_BUCKET=seu_projeto.appspot.com
 VITE_FIREBASE_MESSAGING_SENDER_ID=seu_sender_id
 VITE_FIREBASE_APP_ID=seu_app_id
 ```
 
-Utilize os valores correspondentes ao projeto Firebase correto e ao código existente. Os nomes das variáveis devem corresponder aos utilizados pela aplicação.
-
-**Segurança:** não inclua senhas, chaves privadas, credenciais de contas de serviço ou arquivos de configuração privilegiados no repositório público. A configuração pública do Firebase não substitui as regras de segurança do banco de dados.
-
-### 4. Execute a aplicação
+### 4. Iniciar o Servidor de Desenvolvimento
 
 ```bash
 npm run dev
 ```
 
-O Vite exibirá no terminal o endereço local para abrir no navegador, normalmente:
+Acesse a aplicação no navegador em:
 
 ```text
-http://localhost:5173
+http://localhost:3000
 ```
 
-### 5. Gere a versão de produção
-
-Para verificar se a aplicação compila corretamente:
+### 5. Compilar para Produção
 
 ```bash
 npm run build
-```
-
-Para visualizar localmente a versão compilada, se o script estiver disponível:
-
-```bash
-npm run preview
 ```
 
 ### ⚠️ Solução de problemas: esbuild
@@ -208,79 +205,113 @@ npm run dev
 
 Não force a atualização de dependências indiscriminadamente. Alterações de versão devem respeitar as dependências existentes e o arquivo `package-lock.json`.
 
-## 🗂️ Organização do projeto
+---
 
-A estrutura pode variar conforme a implementação. Em uma aplicação React com Vite, uma organização possível é:
+## 🗂️ Estrutura de Diretórios
 
 ```text
 bioamazonia/
 ├── public/
-│   ├── imagens/
-│   └── manifest.json
+│   ├── imagens/                           # Imagens de frutos, experimentos e página inicial
+│   ├── apple-touch-icon.png               # Ícone para dispositivos Apple
+│   ├── icon.svg                           # Ícone vetorial da aplicação
+│   ├── pwa-192x192.png                    # Ícone PWA (192x192)
+│   ├── pwa-512x512.png                    # Ícone PWA (512x512)
+│   └── pwa-maskable-512x512.png           # Ícone PWA adaptável
+├── scripts/
+│   └── generate-png-icons.js              # Geração de ícones PNG
 ├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   ├── data/
-│   ├── hooks/
-│   ├── utils/
-│   ├── styles/
-│   ├── App.jsx
-│   └── main.jsx
-├── .env.example
-├── .gitignore
-├── index.html
-├── package.json
-├── package-lock.json
-└── README.md
+│   ├── components/                        # Componentes reutilizáveis da interface
+│   │   ├── experiments/                   # Componentes dos experimentos
+│   │   │   ├── DeleteExperimentModal.tsx
+│   │   │   ├── ExperimentA_VitaminC.tsx
+│   │   │   ├── ExperimentB_EnzymaticBrowning.tsx
+│   │   │   ├── ExperimentC_AnthocyaninPH.tsx
+│   │   │   └── ExperimentRecordFormModal.tsx
+│   │   ├── Footer.tsx                     # Rodapé
+│   │   ├── Navbar.tsx                     # Navegação principal
+│   │   ├── OfflineIndicator.tsx           # Aviso de conexão offline
+│   │   └── PWAInstallButton.tsx           # Botão de instalação do app
+│   ├── contexts/                          # Contextos compartilhados da aplicação
+│   │   └── AuthContext.tsx                # Autenticação e perfil do usuário
+│   ├── data/                              # Dados estáticos de páginas e catálogos
+│   │   ├── biochemistryTopicsData.ts
+│   │   ├── conservationData.ts
+│   │   ├── experimentsData.ts
+│   │   ├── fruitsCatalogData.ts
+│   │   ├── fruitsData.ts
+│   │   ├── protocolsData.ts
+│   │   ├── referencesData.ts
+│   │   └── stabilityData.ts
+│   ├── hooks/                             # Hooks React reutilizáveis
+│   │   ├── useOnlineStatus.ts             # Detecção do estado da conexão
+│   │   └── usePWAInstall.ts               # Fluxo de instalação PWA
+│   ├── pages/                             # Páginas da aplicação
+│   │   ├── AdminPage.tsx
+│   │   ├── BiochemistryPage.tsx
+│   │   ├── CatalogPage.tsx
+│   │   ├── ConservationPage.tsx
+│   │   ├── ExperimentsPage.tsx
+│   │   ├── FruitDetailPage.tsx
+│   │   ├── HomePage.tsx
+│   │   ├── LoginPage.tsx
+│   │   ├── NotFoundPage.tsx
+│   │   ├── ReferencesPage.tsx
+│   │   └── StabilityPage.tsx
+│   ├── services/                          # Integrações e persistência de dados
+│   │   ├── conservationStorageService.ts
+│   │   ├── experimentStorageService.ts
+│   │   ├── firebase.ts
+│   │   ├── fruitStorageService.ts
+│   │   ├── referenceStorageService.ts
+│   │   ├── topicStorageService.ts
+│   │   └── userManagementService.ts
+│   ├── types/
+│   │   └── index.ts                       # Tipos compartilhados
+│   ├── App.tsx                            # Composição e navegação da aplicação
+│   ├── index.css                          # Estilos globais
+│   └── main.tsx                           # Ponto de entrada React
+├── firestore.rules                        # Regras de acesso do Firestore
+├── index.html                             # Documento HTML principal
+├── package.json                           # Dependências e comandos do projeto
+├── package-lock.json                      # Lockfile do npm
+├── bun.lock                               # Lockfile do Bun
+├── tsconfig.json                          # Configuração do TypeScript
+├── vite.config.ts                         # Configuração do Vite e do PWA
+└── README.md                              # Documentação do projeto
 ```
 
-Essa estrutura é ilustrativa. Mantenha a organização real do repositório e não crie pastas vazias apenas para reproduzir o exemplo.
+---
 
-## 🧪 Validação científica e qualidade dos dados
+## 📚 Referências Científicas Principais
 
-A plataforma deve priorizar:
+Todas as referências cadastradas contam com links e identificadores verificáveis:
 
-- Identificação da origem de cada registro.
-- Registro das condições experimentais e das unidades de medida.
-- Separação entre resultados próprios, dados publicados e dados demonstrativos.
-- Referências científicas verificáveis.
-- Histórico de revisão e publicação, quando implementado.
-- Proteção contra alterações e exclusões não autorizadas.
-- Apresentação de limitações metodológicas e incertezas.
+1. **Fujita et al. (2013)** — _Impact of spouted bed drying on bioactive compounds and antioxidant activity of camu-camu pulp._ Food Research International.
+2. **Schauss et al. (2006)** — _Phytochemical and nutrient composition of the freeze-dried Amazonian palm berry, Euterpe oleracea Mart. (Açaí)._ J. Agric. Food Chem.
+3. **Yuyama et al. (2002)** — _Camu-camu: a nova modalidade de consumo de vitamina C "in natura"._ Acta Amazonica / Embrapa.
+4. **Chagas et al. (2012)** — _Avaliação do desempenho do camu-camu em terra firme na região de Manaus, AM._ Embrapa Amazônia Ocidental.
+5. **Nascimento & Silva (2005)** — _Diferenciação do açaí-do-Amazonas (E. precatoria) do açaí-do-Pará (E. oleracea)._ Com. Técnico 29, Embrapa.
+6. **Menezes et al. (2008)** — _Euterpe precatoria Mart.: boas práticas de produção na coleta e pós-coleta de açaí-solteiro._ Embrapa Acre.
+7. **Ramos et al. (2018)** — _Tucumã (Astrocaryum aculeatum)._ Plantas para o Futuro – Região Norte (MMA / Embrapa).
+8. **Ferreira & Gentil (2009)** — _Técnicas para facilitar a germinação das sementes de tucumã-do-Amazonas._ Com. Técnico 77, Embrapa.
+9. **Sampaio et al. (2015)** — _Buriti (Mauritia flexuosa)._ Palmeiras Nativas do Brasil, Embrapa.
+10. **Vieira & Bentes (2010)** — _Folder Buriti: descrição, habitat e usos._ Embrapa Rondônia.
+11. **Menezes et al. (2012)** — _Biometria de frutos de buriti, Roraima: produção de polpa e óleo._ Embrapa Roraima.
+12. **Maeda et al. (2007)** — _Estabilidade de ácido ascórbico e antocianinas em néctar de camu-camu._ Ciência e Tecnologia de Alimentos (SciELO).
+13. **Barros et al. (2024)** — _Effects of distinct food preservation methods on the bioactive content and antioxidant capacity of tucumã-do-Amazonas._ PubMed / Food Chemistry.
+14. **Serra et al. (2015)** — _Evaluation of Antioxidant Capacity of Solanum sessiliflorum (Cubiu) Extract: An In Vitro Assay._ PMC / Oxidative Medicine and Cellular Longevity.
+15. **Rogez (2000)** — _Açaí: preparo, composição e melhoramento da conservação._ Embrapa Amazônia Oriental / EDUFPA.
 
-Os resultados devem ser interpretados dentro dos limites do protocolo experimental. A presença de compostos antioxidantes não constitui, isoladamente, comprovação de efeitos clínicos ou de benefícios específicos à saúde.
+---
 
-## 🤝 Contribuições
+## 🌱 Impacto Esperado
 
-Contribuições para a melhoria da plataforma são bem-vindas, especialmente nas áreas de desenvolvimento web, interface e experiência do usuário, organização de dados, bioquímica e validação científica.
+O **BioAmazônia** visa encurtar a distância entre a bancada de pesquisa e as comunidades produtoras locais, oferecendo uma plataforma tecnológica e transparente que:
 
-Para contribuir:
-
-1. Faça um fork do repositório.
-2. Crie uma branch para sua alteração.
-3. Implemente e teste as modificações.
-4. Descreva as mudanças realizadas.
-5. Envie um pull request para revisão.
-
-Alterações que afetem os resultados científicos, os protocolos ou as permissões de acesso devem ser acompanhadas de justificativa e revisão adequada.
-
-## 📚 Referências científicas
-
-As referências utilizadas na plataforma devem ser identificadas individualmente, com autores, título, ano de publicação, periódico ou instituição e DOI ou endereço eletrônico, quando disponível.
-
-Consulte a seção **Referências** da aplicação para acessar as fontes vinculadas aos conteúdos e experimentos.
-
-## 🌱 Impacto esperado
-
-O BioAmazônia busca contribuir para a valorização da biodiversidade amazônica, a organização de informações científicas e a divulgação acessível de conhecimentos sobre bioquímica e estabilidade de compostos presentes em frutos regionais.
-
-A proposta integra pesquisa, educação e tecnologia em um ambiente digital voltado à consulta, ao registro e à análise de informações científicas.
-
-## 📄 Licença
-
-A licença do projeto deverá ser definida pelos responsáveis. Até que uma licença seja adicionada ao repositório, não presuma que o código ou os materiais estejam liberados para reutilização irrestrita.
+- Valoriza a sociobiodiversidade e a bioeconomia sustentável da floresta em pé.
+- Fornece respaldo técnico e científico para o aproveitamento integral e pós-colheita dos frutos nativos.
+- Promove a formação científica continuada em bioquímica, botânica e ciências dos alimentos.
 
 ---
 

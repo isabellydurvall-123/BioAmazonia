@@ -1,34 +1,57 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
-interface BeforeInstallPromptEvent extends Event {
+export interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 }
 
+// Module-level prompt capture to prevent losing early beforeinstallprompt events
+let capturedPrompt: BeforeInstallPromptEvent | null = null;
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    capturedPrompt = e as BeforeInstallPromptEvent;
+  });
+}
+
 export function usePWAInstall() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isInstalled, setIsInstalled] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(() => capturedPrompt);
+  const [isInstalled, setIsInstalled] = useState<boolean>(false);
+  const [isIOS, setIsIOS] = useState<boolean>(false);
+  const [isAndroid, setIsAndroid] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   useEffect(() => {
-    // Detect standalone mode (already installed)
+    // 1. Detect standalone mode (app already installed and launched from home screen)
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+      (window.navigator as unknown as { standalone?: boolean }).standalone === true ||
+      document.referrer.includes('android-app://');
+    
     setIsInstalled(isStandalone);
 
-    // Detect iOS devices
-    const userAgent = window.navigator.userAgent.toLowerCase();
-    const isIOSDevice = /iphone|ipad|ipod/.test(userAgent);
-    setIsIOS(isIOSDevice);
+    // 2. Detect platform & mobile user agent
+    const ua = (window.navigator.userAgent || '').toLowerCase();
+    const isIOSDevice = /iphone|ipad|ipod/.test(ua);
+    const isAndroidDevice = /android/.test(ua);
+    const isMobileDevice = isIOSDevice || isAndroidDevice || /mobile|tablet/.test(ua);
 
+    setIsIOS(isIOSDevice);
+    setIsAndroid(isAndroidDevice);
+    setIsMobile(isMobileDevice);
+
+    // 3. Listener for prompt if not captured yet
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
+      const promptEvent = e as BeforeInstallPromptEvent;
+      capturedPrompt = promptEvent;
+      setDeferredPrompt(promptEvent);
     };
 
     const handleAppInstalled = () => {
       setIsInstalled(true);
+      capturedPrompt = null;
       setDeferredPrompt(null);
     };
 
@@ -41,22 +64,36 @@ export function usePWAInstall() {
     };
   }, []);
 
-  const install = async () => {
-    if (!deferredPrompt) return false;
-    await deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      setIsInstalled(true);
-      setDeferredPrompt(null);
-      return true;
+  const install = useCallback(async (): Promise<'accepted' | 'dismissed' | 'manual_needed'> => {
+    const promptToUse = deferredPrompt || capturedPrompt;
+    if (!promptToUse) {
+      // Native prompt not supported or not triggered yet (standard on iOS and some mobile browsers)
+      return 'manual_needed';
     }
-    return false;
-  };
+
+    try {
+      await promptToUse.prompt();
+      const { outcome } = await promptToUse.userChoice;
+      if (outcome === 'accepted') {
+        setIsInstalled(true);
+        capturedPrompt = null;
+        setDeferredPrompt(null);
+        return 'accepted';
+      }
+      return 'dismissed';
+    } catch (err) {
+      console.warn('Erro ao disparar prompt de instalação:', err);
+      return 'manual_needed';
+    }
+  }, [deferredPrompt]);
 
   return {
-    isInstallable: !!deferredPrompt,
+    isInstallable: !!(deferredPrompt || capturedPrompt),
     isInstalled,
     isIOS,
+    isAndroid,
+    isMobile,
     install,
+    hasPrompt: !!(deferredPrompt || capturedPrompt)
   };
 }

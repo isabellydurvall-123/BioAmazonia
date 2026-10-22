@@ -16,6 +16,7 @@ export interface ReferenceFilterCriteria {
 
 export interface IReferenceStorageService {
   list(filters?: ReferenceFilterCriteria): Promise<ScientificReference[]>;
+  listCachedSync(filters?: ReferenceFilterCriteria): ScientificReference[];
   get(id: string): Promise<ScientificReference | null>;
   create(reference: Omit<ScientificReference, 'createdAt'>, currentUser?: UserProfile | null): Promise<ScientificReference>;
   update(reference: ScientificReference, currentUser?: UserProfile | null): Promise<ScientificReference>;
@@ -72,6 +73,19 @@ class ReferenceStorageService implements IReferenceStorageService {
         console.error('Erro em ouvinte de referências:', err);
       }
     });
+  }
+
+  public listCachedSync(filters?: ReferenceFilterCriteria): ScientificReference[] {
+    let result = [...this.localCache];
+    if (filters?.searchTerm) {
+      const term = filters.searchTerm.toLowerCase();
+      result = result.filter(r => 
+        r.title.toLowerCase().includes(term) ||
+        r.authors.toLowerCase().includes(term) ||
+        r.journal.toLowerCase().includes(term)
+      );
+    }
+    return result;
   }
 
   public async list(filters?: ReferenceFilterCriteria): Promise<ScientificReference[]> {

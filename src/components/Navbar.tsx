@@ -163,7 +163,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
               );
             })}
             
-            <div className="pt-3 border-t border-slate-100 mt-2">
+            <div className="pt-3 border-t border-slate-100 mt-2 space-y-2">
+              <div className="w-full flex justify-center pb-1">
+                <PWAInstallButton />
+              </div>
               <button
                 onClick={() => handleLinkClick(currentUser ? (isResearcher ? 'admin' : 'login') : 'login')}
                 className="w-full text-left px-3 py-2.5 rounded-md text-sm font-semibold text-emerald-900 bg-emerald-50 hover:bg-emerald-100 transition-colors"
