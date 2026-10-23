@@ -4,6 +4,8 @@ import { FruitSpecies, UserProfile } from '../types';
 import { FRUITS_CATALOG } from '../data/fruitsCatalogData';
 
 const LOCAL_STORAGE_KEY = 'bioamazonia_fruits_catalog_v2';
+const DELETED_FRUITS_STORAGE_KEY = 'bioamazonia_deleted_fruits_v1';
+const DELETED_FRUITS_COLLECTION = 'deletedFruits';
 
 const normalizeFruitImagePaths = (fruit: FruitSpecies): FruitSpecies => {
   const authorizedPhotographs = fruit.authorizedPhotographs?.map(photo => ({
@@ -23,7 +25,7 @@ export interface IFruitStorageService {
   getCachedSync(id: string): FruitSpecies | null;
   create(fruit: FruitSpecies, currentUser?: UserProfile | null): Promise<FruitSpecies>;
   update(fruit: FruitSpecies, currentUser?: UserProfile | null): Promise<FruitSpecies>;
-  delete(id: string, currentUser?: UserProfile | null): Promise<void>;
+  delete(id: string, currentUser?: UserProfile | null): Promise<boolean>;
   subscribe(callback: () => void): () => void;
 }
 
@@ -31,6 +33,9 @@ class FruitStorageService implements IFruitStorageService {
   private localCache: FruitSpecies[] = [];
   private listeners: Set<() => void> = new Set();
   private isInitialized: boolean = false;
+  private deletedFruitIds = new Set<string>();
+  private remoteDeletedFruitIds = new Set<string>();
+  private hasLoadedRemoteDeletedFruitIds = false;
 
   constructor() {
     this.initLocalCache();
@@ -54,13 +59,19 @@ class FruitStorageService implements IFruitStorageService {
   }
 
   private initLocalCache() {
+    this.deletedFruitIds = this.loadDeletedFruitIds();
     try {
       const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (stored) {
-        const parsed: FruitSpecies[] = (JSON.parse(stored) as FruitSpecies[]).map(normalizeFruitImagePaths);
+        const parsed: FruitSpecies[] = (JSON.parse(stored) as FruitSpecies[])
+          .map(normalizeFruitImagePaths)
+          .filter(fruit => !this.deletedFruitIds.has(fruit.id.toLowerCase()));
         const existingIds = new Set(parsed.map(f => f.id.toLowerCase()));
         for (const catalogFruit of FRUITS_CATALOG) {
-          if (!existingIds.has(catalogFruit.id.toLowerCase())) {
+          if (
+            !existingIds.has(catalogFruit.id.toLowerCase()) &&
+            !this.deletedFruitIds.has(catalogFruit.id.toLowerCase())
+          ) {
             parsed.push(catalogFruit);
           }
         }
@@ -70,12 +81,78 @@ class FruitStorageService implements IFruitStorageService {
           localStorage.setItem(LOCAL_STORAGE_KEY, updatedStorage);
         }
       } else {
-        this.localCache = [...FRUITS_CATALOG];
+        this.localCache = FRUITS_CATALOG.filter(
+          fruit => !this.deletedFruitIds.has(fruit.id.toLowerCase())
+        );
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(this.localCache));
       }
     } catch {
-      this.localCache = [...FRUITS_CATALOG];
+      this.localCache = FRUITS_CATALOG.filter(
+        fruit => !this.deletedFruitIds.has(fruit.id.toLowerCase())
+      );
     }
+  }
+
+  private loadDeletedFruitIds(): Set<string> {
+    try {
+      const stored = localStorage.getItem(DELETED_FRUITS_STORAGE_KEY);
+      const ids: unknown = stored ? JSON.parse(stored) : [];
+      if (!Array.isArray(ids) || !ids.every(id => typeof id === 'string')) {
+        throw new Error('Formato inválido para as exclusões de frutos armazenadas.');
+      }
+      return new Set(ids.map(id => id.trim().toLowerCase()).filter(Boolean));
+    } catch (err) {
+      console.warn('Falha ao carregar registro local de frutos excluídos:', err);
+      return new Set();
+    }
+  }
+
+  private saveDeletedFruitIds(): void {
+    try {
+      localStorage.setItem(
+        DELETED_FRUITS_STORAGE_KEY,
+        JSON.stringify(Array.from(this.deletedFruitIds))
+      );
+    } catch (err) {
+      console.error('Falha ao salvar registro de frutos excluídos:', err);
+      throw new Error('Não foi possível salvar o registro de exclusão neste dispositivo.');
+    }
+  }
+
+  private async syncDeletedFruitIds(): Promise<void> {
+    if (!this.hasLoadedRemoteDeletedFruitIds) {
+      try {
+        const snapshot = await getDocs(collection(db, DELETED_FRUITS_COLLECTION));
+        snapshot.forEach(deletedFruit => {
+          const id = deletedFruit.id.trim().toLowerCase();
+          if (id) {
+            this.deletedFruitIds.add(id);
+            this.remoteDeletedFruitIds.add(id);
+          }
+        });
+        this.saveDeletedFruitIds();
+        this.hasLoadedRemoteDeletedFruitIds = true;
+      } catch (err) {
+        console.warn('Sincronização do registro de exclusões de frutos indisponível:', err);
+      }
+    }
+
+    for (const id of this.deletedFruitIds) {
+      if (this.remoteDeletedFruitIds.has(id)) continue;
+      try {
+        await setDoc(doc(db, DELETED_FRUITS_COLLECTION, id), {
+          fruitId: id,
+          deletedAt: new Date().toISOString()
+        });
+        this.remoteDeletedFruitIds.add(id);
+      } catch (err) {
+        console.warn(`Falha ao sincronizar a exclusão do fruto "${id}" com o Firestore:`, err);
+      }
+    }
+
+    this.localCache = this.localCache.filter(
+      fruit => !this.deletedFruitIds.has(fruit.id.toLowerCase())
+    );
   }
 
   private saveToLocalCache() {
@@ -91,6 +168,7 @@ class FruitStorageService implements IFruitStorageService {
       this.initLocalCache();
     }
     const cleanId = (id || '').trim().toLowerCase();
+    if (this.deletedFruitIds.has(cleanId)) return null;
     return this.localCache.find(f => f.id.toLowerCase() === cleanId) || null;
   }
 
@@ -104,6 +182,7 @@ class FruitStorageService implements IFruitStorageService {
     const isPrivileged = currentUser?.role === 'admin' || currentUser?.role === 'researcher';
 
     return this.localCache.filter(fruit => {
+      if (this.deletedFruitIds.has(fruit.id.toLowerCase())) return false;
       if (!isPrivileged) {
         return fruit.publicationStatus === 'Publicado e Validado' || (fruit.publicationStatus as string) === 'publicado';
       }
@@ -126,6 +205,7 @@ class FruitStorageService implements IFruitStorageService {
     statusFilter: 'all' | 'publicado' | 'rascunho' | 'em_revisao' = 'all',
     currentUser?: UserProfile | null
   ): Promise<FruitSpecies[]> {
+    await this.syncDeletedFruitIds();
     try {
       const col = collection(db, 'fruits');
       const snap = await getDocs(col);
@@ -137,7 +217,11 @@ class FruitStorageService implements IFruitStorageService {
 
         // Mesclar com cache local preservando os dados
         const map = new Map(this.localCache.map(f => [f.id, f]));
-        firestoreList.forEach(f => map.set(f.id, f));
+        firestoreList.forEach(f => {
+          if (!this.deletedFruitIds.has(f.id.toLowerCase())) {
+            map.set(f.id, f);
+          }
+        });
         this.localCache = Array.from(map.values());
         this.saveToLocalCache();
       }
@@ -148,6 +232,7 @@ class FruitStorageService implements IFruitStorageService {
     const isPrivileged = currentUser?.role === 'admin' || currentUser?.role === 'researcher';
 
     return this.localCache.filter(fruit => {
+      if (this.deletedFruitIds.has(fruit.id.toLowerCase())) return false;
       // Regra de Publicação: usuários não autorizados/visitantes apenas visualizam espécies validadas/publicadas
       if (!isPrivileged) {
         return fruit.publicationStatus === 'Publicado e Validado' || (fruit.publicationStatus as string) === 'publicado';
@@ -168,6 +253,9 @@ class FruitStorageService implements IFruitStorageService {
   }
 
   public async get(id: string): Promise<FruitSpecies | null> {
+    const cleanId = (id || '').trim().toLowerCase();
+    await this.syncDeletedFruitIds();
+    if (this.deletedFruitIds.has(cleanId)) return null;
     try {
       const docRef = doc(db, 'fruits', id);
       const snap = await getDoc(docRef);
@@ -204,6 +292,17 @@ class FruitStorageService implements IFruitStorageService {
       await setDoc(docRef, newFruit);
     } catch (err) {
       console.warn('Persistindo espécie no repositório local:', err);
+    }
+
+    const normalizedId = newFruit.id.toLowerCase();
+    if (this.deletedFruitIds.delete(normalizedId)) {
+      this.remoteDeletedFruitIds.delete(normalizedId);
+      this.saveDeletedFruitIds();
+      try {
+        await deleteDoc(doc(db, DELETED_FRUITS_COLLECTION, normalizedId));
+      } catch (err) {
+        console.warn(`Falha ao remover a marca de exclusão do fruto "${normalizedId}" no Firestore:`, err);
+      }
     }
 
     this.localCache.unshift(newFruit);
@@ -246,21 +345,43 @@ class FruitStorageService implements IFruitStorageService {
     return updatedFruit;
   }
 
-  public async delete(id: string, currentUser?: UserProfile | null): Promise<void> {
+  public async delete(id: string, currentUser?: UserProfile | null): Promise<boolean> {
     if (currentUser?.role !== 'admin') {
       throw new Error('Acesso negado: Apenas administradores curadores podem excluir espécies do catálogo.');
     }
 
+    const normalizedId = id.trim().toLowerCase();
+    this.deletedFruitIds.add(normalizedId);
     try {
-      const docRef = doc(db, 'fruits', id);
-      await deleteDoc(docRef);
+      this.saveDeletedFruitIds();
     } catch (err) {
-      console.warn('Excluindo espécie do cache local:', err);
+      this.deletedFruitIds.delete(normalizedId);
+      throw err;
     }
 
-    this.localCache = this.localCache.filter(f => f.id !== id);
+    this.localCache = this.localCache.filter(f => f.id.toLowerCase() !== normalizedId);
     this.saveToLocalCache();
     this.notify();
+
+    let syncedToFirestore = false;
+    try {
+      await setDoc(doc(db, DELETED_FRUITS_COLLECTION, normalizedId), {
+        fruitId: normalizedId,
+        deletedAt: new Date().toISOString()
+      });
+      this.remoteDeletedFruitIds.add(normalizedId);
+      syncedToFirestore = true;
+    } catch (err) {
+      console.warn(`Exclusão do fruto "${normalizedId}" foi salva localmente, mas não sincronizada com o Firestore:`, err);
+    }
+
+    try {
+      await deleteDoc(doc(db, 'fruits', id));
+    } catch (err) {
+      console.warn(`Falha ao excluir o registro remoto do fruto "${id}"; a marca de exclusão continuará ocultando-o:`, err);
+    }
+
+    return syncedToFirestore;
   }
 }
 

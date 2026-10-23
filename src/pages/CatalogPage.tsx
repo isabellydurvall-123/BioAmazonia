@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { FRUITS_CATALOG } from '../data/fruitsCatalogData';
 import { FruitSpecies, PageRoute } from '../types';
 import { fruitStorageService } from '../services/fruitStorageService';
 import { useAuth } from '../contexts/AuthContext';
@@ -12,8 +11,7 @@ interface CatalogPageProps {
 export const CatalogPage: React.FC<CatalogPageProps> = ({ onNavigate }) => {
   const { currentUser, isResearcher, isAdmin } = useAuth();
   const [fruitsList, setFruitsList] = useState<FruitSpecies[]>(() => {
-    const cached = fruitStorageService.listCachedSync('all', currentUser);
-    return cached.length > 0 ? cached : FRUITS_CATALOG;
+    return fruitStorageService.listCachedSync('all', currentUser);
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFamily, setSelectedFamily] = useState<string>('Todas');

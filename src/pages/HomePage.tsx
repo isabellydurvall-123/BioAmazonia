@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { PageRoute, FruitSpecies } from '../types';
-import { FRUITS_CATALOG } from '../data/fruitsCatalogData';
 import { fruitStorageService } from '../services/fruitStorageService';
 import { ArrowRight, BookOpen, FlaskConical, Leaf, LineChart, Shield, Sparkles } from 'lucide-react';
 
@@ -10,8 +9,7 @@ interface HomePageProps {
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const [fruitsList, setFruitsList] = useState<FruitSpecies[]>(() => {
-    const cached = fruitStorageService.listCachedSync('publicado');
-    return cached.length > 0 ? cached : FRUITS_CATALOG;
+    return fruitStorageService.listCachedSync('publicado');
   });
 
   useEffect(() => {

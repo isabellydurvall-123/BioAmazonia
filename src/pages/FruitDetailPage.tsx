@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { FRUITS_CATALOG } from '../data/fruitsCatalogData';
 import { FruitSpecies, PageRoute, ScientificReference, ConservationGuideline } from '../types';
 import { fruitStorageService } from '../services/fruitStorageService';
 import { referenceStorageService } from '../services/referenceStorageService';
@@ -35,10 +34,10 @@ export const FruitDetailPage: React.FC<FruitDetailPageProps> = ({ fruitId, onNav
   const { currentUser } = useAuth();
   
   // Obter imediatamente do cache local síncrono para render instantâneo sem nenhum flash de tela
-  const initialFruit = fruitStorageService.getCachedSync(fruitId) || FRUITS_CATALOG.find(f => f.id.toLowerCase() === fruitId.toLowerCase()) || null;
+  const initialFruit = fruitStorageService.getCachedSync(fruitId);
   const initialList = fruitStorageService.listCachedSync('all', currentUser);
 
-  const [allFruits, setAllFruits] = useState<FruitSpecies[]>(() => initialList.length > 0 ? initialList : FRUITS_CATALOG);
+  const [allFruits, setAllFruits] = useState<FruitSpecies[]>(initialList);
   const [fruit, setFruit] = useState<FruitSpecies | null>(initialFruit);
   const [isLoading, setIsLoading] = useState<boolean>(!initialFruit);
 

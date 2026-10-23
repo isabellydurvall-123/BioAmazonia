@@ -97,7 +97,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout, onNavigate }) =>
   const [fruits, setFruits] = useState<FruitSpecies[]>([]);
   const [topics, setTopics] = useState<BiochemistryTopic[]>([]);
   const [experiments, setExperiments] = useState<UnifiedExperimentRecord[]>([]);
-  const [references, setReferences] = useState<ScientificReference[]>([]);
+  const [references, setReferences] = useState<ScientificReference[]>(() =>
+    referenceStorageService.listCachedSync()
+  );
   const [guidelines, setGuidelines] = useState<ConservationGuideline[]>([]);
   const [registeredUsers, setRegisteredUsers] = useState<UserProfile[]>([]);
   const [isLoadingData, setIsLoadingData] = useState<boolean>(true);
@@ -736,8 +738,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout, onNavigate }) =>
       `Excluir Espécie "${f.popularName}"?`,
       `Esta ação removerá permanentemente a ficha taxonômica de ${f.scientificName} (${f.popularName}) do banco de dados fitoquímico. Apenas o administrador curador pode executar esta ação.`,
       async () => {
-        await fruitStorageService.delete(f.id, currentUser);
-        showNotice('success', `Espécie "${f.popularName}" excluída permanentemente.`);
+        const syncedToFirestore = await fruitStorageService.delete(f.id, currentUser);
+        showNotice(
+          'success',
+          syncedToFirestore
+            ? `Espécie "${f.popularName}" excluída permanentemente.`
+            : `Espécie "${f.popularName}" excluída neste dispositivo. A sincronização será tentada novamente quando houver conexão.`
+        );
       }
     );
   };
@@ -767,6 +774,42 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout, onNavigate }) =>
   const [topicRelatedIds, setTopicRelatedIds] = useState<string[]>([]);
   const [topicSelectedRefs, setTopicSelectedRefs] = useState<string[]>([]);
   const [topicStatus, setTopicStatus] = useState<'Validado por Literatura Indexada' | 'Em Revisão por Pares' | 'Pendente de Verificação'>('Validado por Literatura Indexada');
+
+  const topicAvailableReferences = useMemo(() => {
+    const list: Array<Pick<ScientificReference, 'id' | 'title' | 'authors' | 'journal' | 'year' | 'doi'>> =
+      references.map(({ id, title, authors, journal, year, doi }) => ({
+        id,
+        title,
+        authors,
+        journal,
+        year,
+        doi
+      }));
+
+    if (editingTopic && Array.isArray(editingTopic.references)) {
+      editingTopic.references.forEach((topicReference, index) => {
+        const normalizedDoi = topicReference.doi?.trim().toLowerCase();
+        const normalizedTitle = topicReference.title.trim().toLowerCase();
+        const alreadyAvailable = list.some(reference =>
+          (normalizedDoi && reference.doi?.trim().toLowerCase() === normalizedDoi) ||
+          (normalizedTitle && reference.title.trim().toLowerCase() === normalizedTitle)
+        );
+
+        if (!alreadyAvailable) {
+          list.push({
+            id: `topic-ref-${editingTopic.id}-${index}`,
+            title: topicReference.title,
+            authors: topicReference.authors,
+            journal: topicReference.journal,
+            year: topicReference.year,
+            doi: topicReference.doi
+          });
+        }
+      });
+    }
+
+    return list;
+  }, [references, editingTopic]);
 
   const filteredTopics = useMemo(() => {
     return topics.filter(t => {
@@ -820,7 +863,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout, onNavigate }) =>
     setTopicLimitations(t.scientificLimitations);
     setTopicFruitExamples(t.fruitExamples ? JSON.parse(JSON.stringify(t.fruitExamples)) : []);
     setTopicRelatedIds(t.relatedTopicIds ? [...t.relatedTopicIds] : []);
-    setTopicSelectedRefs([]);
+    const initialSelectedRefs = (Array.isArray(t.references) ? t.references : []).map((topicReference, index) => {
+      const normalizedDoi = topicReference.doi?.trim().toLowerCase();
+      const normalizedTitle = topicReference.title.trim().toLowerCase();
+      const matchedReference = references.find(reference =>
+        (normalizedDoi && reference.doi?.trim().toLowerCase() === normalizedDoi) ||
+        (normalizedTitle && reference.title.trim().toLowerCase() === normalizedTitle)
+      );
+
+      return matchedReference?.id || `topic-ref-${t.id}-${index}`;
+    });
+    setTopicSelectedRefs(Array.from(new Set(initialSelectedRefs)));
     setTopicStatus(t.verificationStatus as any || 'Validado por Literatura Indexada');
     setTopicFormError(null);
     setIsTopicModalOpen(true);
@@ -832,19 +885,16 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout, onNavigate }) =>
     setIsSubmittingTopic(true);
 
     try {
-      const mappedRefs = topicSelectedRefs.map(refId => {
-        const found = references.find(r => r.id === refId);
-        if (found) {
-          return {
-            title: found.title,
-            authors: found.authors,
-            journal: found.journal,
-            year: found.year,
-            doi: found.doi
-          };
-        }
-        return null;
-      }).filter(Boolean) as any[];
+      const mappedRefs = topicSelectedRefs.flatMap(refId => {
+        const found = topicAvailableReferences.find(reference => reference.id === refId);
+        return found ? [{
+          title: found.title,
+          authors: found.authors,
+          journal: found.journal,
+          year: found.year,
+          doi: found.doi
+        }] : [];
+      });
 
       const finalIntro = topicIntro.trim() || topicSummary.trim() || `Fundamentos conceituais e bioquímicos de ${topicTitle.trim()} na biodiversidade amazônica.`;
       const finalSummary = topicSummary.trim() || topicIntro.trim() || `Estudo bioquímico sobre ${topicTitle.trim()}.`;
@@ -862,7 +912,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout, onNavigate }) =>
         experimentalRelevance: topicRelevance.trim(),
         scientificLimitations: topicLimitations.trim(),
         relatedTopicIds: topicRelatedIds,
-        references: mappedRefs.length > 0 ? mappedRefs : (editingTopic?.references || []),
+        references: mappedRefs,
         updatedAt: new Date().toLocaleDateString('pt-BR'),
         verificationStatus: topicStatus
       };
@@ -3782,7 +3832,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout, onNavigate }) =>
                       {references.map((r) => {
                         const isSelected = fruitSelectedRefs.includes(r.id);
                         return (
-                          <label key={r.id} className="flex items-start gap-2.5 text-xs text-slate-700 cursor-pointer hover:bg-slate-100 p-1.5 rounded transition-colors">
+                          <label
+                            key={r.id}
+                            className={`flex items-start gap-2.5 text-xs cursor-pointer p-1.5 rounded border transition-colors ${
+                              isSelected
+                                ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
+                                : 'bg-white border-transparent text-slate-700 hover:bg-slate-100'
+                            }`}
+                          >
                             <input
                               type="checkbox"
                               checked={isSelected}
@@ -3801,6 +3858,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout, onNavigate }) =>
                                   [{r.year}]
                                 </span>
                                 <span className="font-medium text-slate-900 truncate">{r.title}</span>
+                                {isSelected && (
+                                  <span className="ml-auto shrink-0 rounded-full bg-emerald-700 px-2 py-0.5 text-[10px] font-semibold text-white">
+                                    Veiculada ao estudo
+                                  </span>
+                                )}
                               </div>
                               <div className="text-[11px] text-slate-500 truncate font-mono">
                                 {r.authors} · <em>{r.journal}</em>
@@ -4184,25 +4246,48 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout, onNavigate }) =>
                 <label className="text-xs font-semibold text-slate-700 block mb-1">
                   Associar Referências Científicas ({topicSelectedRefs.length} selecionadas)
                 </label>
-                <div className="max-h-28 overflow-y-auto border border-slate-300 rounded-md p-2 space-y-1.5 bg-slate-50/50">
-                  {references.map((r) => {
+                <div className="max-h-48 overflow-y-auto border border-slate-300 rounded-md p-2.5 space-y-1.5 bg-slate-50/50">
+                  {topicAvailableReferences.map((r) => {
                     const isSelected = topicSelectedRefs.includes(r.id);
                     return (
-                      <label key={r.id} className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer hover:bg-slate-100 p-1 rounded">
+                      <label
+                        key={r.id}
+                        className={`flex items-start gap-2.5 text-xs cursor-pointer p-1.5 rounded border transition-colors ${
+                          isSelected
+                            ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
+                            : 'bg-white border-transparent text-slate-700 hover:bg-slate-100'
+                        }`}
+                      >
                         <input
                           type="checkbox"
                           checked={isSelected}
                           onChange={(e) => {
                             if (e.target.checked) {
-                              setTopicSelectedRefs([...topicSelectedRefs, r.id]);
+                              setTopicSelectedRefs(current =>
+                                current.includes(r.id) ? current : [...current, r.id]
+                              );
                             } else {
-                              setTopicSelectedRefs(topicSelectedRefs.filter(id => id !== r.id));
+                              setTopicSelectedRefs(current => current.filter(id => id !== r.id));
                             }
                           }}
-                          className="rounded text-emerald-800 focus:ring-emerald-700"
+                          className="mt-0.5 rounded text-emerald-800 focus:ring-emerald-700"
                         />
-                        <span className="font-mono text-[11px] text-slate-500">[{r.year}]</span>
-                        <span className="truncate">{r.title}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-[10px] font-bold text-emerald-900 bg-emerald-50 px-1 rounded border border-emerald-200">
+                              [{r.year}]
+                            </span>
+                            <span className="font-medium text-slate-900 truncate">{r.title}</span>
+                            {isSelected && (
+                              <span className="ml-auto shrink-0 rounded-full bg-emerald-700 px-2 py-0.5 text-[10px] font-semibold text-white">
+                                Veiculada ao estudo
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[11px] text-slate-500 truncate font-mono">
+                            {r.authors} · <em>{r.journal}</em>
+                          </div>
+                        </div>
                       </label>
                     );
                   })}
